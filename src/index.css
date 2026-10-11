@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #070F0C;
+    --bg-primary-gradient: #0D1A14;
+    --bg-surface: #11231B;
+    --bg-surface-elevated: #162E23;
+    --border-subtle: rgba(16, 185, 129, 0.2);
+    --border-glow: rgba(255, 255, 255, 0.08);
+    --accent-emerald: #10B981;
+    --accent-emerald-dark: #059669;
+    --accent-orange: #F97316;
+    --accent-orange-glow: rgba(249, 115, 22, 0.18);
+  }
+
+  body {
+    background-color: #070F0C;
+    color: #F1F5F9;
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom shadows, card elevation and glow utilities */
+.pms-card {
+  background-color: #11231B;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 20px rgba(16, 185, 129, 0.05);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pms-card-interactive {
+  background-color: #11231B;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 20px rgba(16, 185, 129, 0.05);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pms-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: rgba(249, 115, 22, 0.45);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.8), 0 0 28px -2px rgba(249, 115, 22, 0.22);
+}
+
+.pms-glass {
+  background: rgba(17, 35, 27, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.ambient-orange-flare {
+  background: radial-gradient(circle at 85% 15%, rgba(249, 115, 22, 0.09) 0%, transparent 45%);
+}
+
+.ambient-emerald-flare {
+  background: radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #070F0C;
+}
+::-webkit-scrollbar-thumb {
+  background: #162E23;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1D3D30;
+}
+
+

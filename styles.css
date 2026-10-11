@@ -1,0 +1,799 @@
+/* ==========================================================================
+   PLACEMENT COMMAND — COLLEGE PLACEMENT MANAGEMENT SYSTEM (PMS)
+   Production Design System & Interaction Physics
+   Theme: Deep Obsidian Forest Green (#060D0A) with Luminous Warm Amber (#F97316)
+   ========================================================================== */
+
+/* --- 1. DESIGN TOKENS & SYSTEM VARIABLES --- */
+:root {
+  /* Canvas & Obsidian Surfaces */
+  --color-canvas-base: #060D0A;
+  --color-canvas-elevated: #0C1A14;
+  --color-surface-card: #11251E;
+  --color-surface-hover: #163228;
+  --color-surface-sunken: #091410;
+  --color-surface-modal: #0F2019;
+  --color-surface-glass: rgba(17, 37, 30, 0.78);
+  --color-surface-glass-heavy: rgba(15, 32, 25, 0.92);
+
+  /* Translucent Glass Borders */
+  --border-emerald-subtle: rgba(16, 185, 129, 0.15);
+  --border-emerald-glow: rgba(16, 185, 129, 0.35);
+  --border-amber-subtle: rgba(249, 115, 22, 0.25);
+  --border-amber-bright: rgba(249, 115, 22, 0.55);
+
+  /* Brand Accents */
+  --accent-emerald-primary: #10B981;
+  --accent-emerald-dark: #059669;
+  --accent-emerald-soft: rgba(16, 185, 129, 0.12);
+  --accent-emerald-text: #6EE7B7;
+
+  /* Contrast Accent: Surgical Amber */
+  --accent-amber-primary: #F97316;
+  --accent-amber-light: #FB923C;
+  --accent-amber-glow: rgba(249, 115, 22, 0.22);
+  --accent-amber-soft: rgba(249, 115, 22, 0.12);
+
+  /* Typography Colors */
+  --text-white: #F8FAFC;
+  --text-primary: #E2E8F0;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-dim: #475569;
+
+  /* Multi-tier Ambient Shadows */
+  --shadow-ambient-tier1: 0 10px 25px -10px rgba(0, 0, 0, 0.7), 0 0 15px -3px rgba(16, 185, 129, 0.05);
+  --shadow-ambient-tier2: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(16, 185, 129, 0.08);
+  --shadow-ambient-amber: 0 22px 45px -12px rgba(0, 0, 0, 0.88), 0 0 28px -2px rgba(249, 115, 22, 0.28);
+  --shadow-modal: 0 35px 70px -15px rgba(0, 0, 0, 0.95), 0 0 40px rgba(16, 185, 129, 0.12);
+
+  /* Interaction Physics */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-standard: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-2xl: 28px;
+  --radius-pill: 9999px;
+}
+
+/* --- 2. GLOBAL RESET & BASE STYLES --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--color-canvas-base);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  position: relative;
+  background-color: var(--color-canvas-base);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, var(--color-canvas-base) 0%, var(--color-canvas-elevated) 100%);
+  background-attachment: fixed;
+  color: var(--text-white);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-canvas-base);
+}
+::-webkit-scrollbar-thumb {
+  background: #153227;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(16, 185, 129, 0.1);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-emerald-dark);
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.35);
+  color: #A7F3D0;
+}
+
+/* --- 3. AMBIENT LIGHTING FLARES --- */
+.ambient-lighting-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ambient-flare-amber {
+  position: absolute;
+  top: -150px;
+  right: -100px;
+  width: 750px;
+  height: 750px;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.055) 0%, rgba(249, 115, 22, 0.015) 45%, transparent 70%);
+  filter: blur(50px);
+}
+
+.ambient-flare-emerald {
+  position: absolute;
+  bottom: -200px;
+  left: -150px;
+  width: 850px;
+  height: 850px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.065) 0%, rgba(5, 150, 105, 0.02) 50%, transparent 75%);
+  filter: blur(60px);
+}
+
+/* --- 4. GLASSMORPHIC CARDS & CONTAINERS --- */
+.pms-glass-card {
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-emerald-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-ambient-tier2);
+  transition: var(--transition-standard);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Interactive Card Physics: upward lift + warm amber rim glow */
+.pms-card-interactive {
+  cursor: pointer;
+}
+.pms-card-interactive:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-amber-bright);
+  box-shadow: var(--shadow-ambient-amber);
+}
+
+/* High-contrast amber border for active/focused cards */
+.pms-card-active {
+  border-color: var(--accent-amber-primary) !important;
+  box-shadow: var(--shadow-ambient-amber) !important;
+}
+
+/* Secondary Elevated Surface */
+.pms-surface-subtle {
+  background: var(--color-surface-sunken);
+  border: 1px solid rgba(16, 185, 129, 0.1);
+  border-radius: var(--radius-lg);
+}
+
+/* --- 5. BUTTONS & INTERACTION PHYSICS --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 0.825rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition-standard);
+  user-select: none;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Spring-like click compression */
+.btn:active,
+button:active {
+  transform: scale(0.97) !important;
+}
+
+/* Amber Contrast Action Button */
+.btn-amber {
+  background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 18px rgba(249, 115, 22, 0.35);
+}
+.btn-amber:hover {
+  background: linear-gradient(135deg, #FB923C 0%, #F97316 100%);
+  box-shadow: 0 6px 24px rgba(249, 115, 22, 0.55);
+}
+.btn-amber:focus-visible {
+  outline: 2px solid var(--accent-amber-light);
+  outline-offset: 3px;
+}
+
+/* Emerald Primary Action Button */
+.btn-emerald {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.3);
+}
+.btn-emerald:hover {
+  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.48);
+}
+.btn-emerald:focus-visible {
+  outline: 2px solid var(--accent-emerald-primary);
+  outline-offset: 3px;
+}
+
+/* Glass Subtle Button */
+.btn-glass {
+  background: rgba(17, 37, 30, 0.65);
+  color: var(--text-primary);
+  border: 1px solid var(--border-emerald-subtle);
+}
+.btn-glass:hover {
+  background: var(--color-surface-hover);
+  color: var(--text-white);
+  border-color: var(--border-amber-subtle);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 0.925rem;
+  border-radius: var(--radius-lg);
+}
+
+/* --- 6. CTC CALLOUTS & BADGES (SURGICAL AMBER) --- */
+.ctc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(249, 115, 22, 0.12);
+  color: #FB923C;
+  border: 1px solid rgba(249, 115, 22, 0.35);
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.15);
+}
+
+.ctc-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #F97316;
+  box-shadow: 0 0 8px #F97316;
+  animation: pulseAmber 2s infinite ease-in-out;
+}
+
+@keyframes pulseAmber {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+    box-shadow: 0 0 12px #F97316, 0 0 20px rgba(249, 115, 22, 0.5);
+  }
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-emerald-text);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.tag-amber {
+  background: rgba(249, 115, 22, 0.1);
+  color: #FB923C;
+  border-color: rgba(249, 115, 22, 0.25);
+}
+
+.tag-neutral {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* --- 7. PORTAL VIEW TRANSITIONS (FLICKER-FREE SLIDE-UP FADE) --- */
+.portal-view-container {
+  position: relative;
+  width: 100%;
+}
+
+.portal-view {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.portal-view.active {
+  display: block;
+  animation: portalSlideUpFade 0.32s var(--ease-spring) forwards;
+}
+
+@keyframes portalSlideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- 8. TOP NAVIGATION & BRAND LOCKUP --- */
+.top-nav {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 68px;
+  background: rgba(6, 13, 10, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border-emerald-subtle);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #11251E 0%, #0C1A14 100%);
+  border: 1px solid var(--border-emerald-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-emerald-primary);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.22);
+}
+
+.brand-text h1 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-white);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.brand-text p {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Role Switcher Pill Bar */
+.role-pill-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: #0B1914;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: var(--radius-lg);
+}
+
+.role-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.775rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-standard);
+}
+.role-tab-btn:hover {
+  color: var(--text-white);
+}
+
+.role-tab-btn.active-student {
+  background: var(--accent-emerald-primary);
+  color: #FFFFFF;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+}
+
+.role-tab-btn.active-company {
+  background: var(--accent-amber-primary);
+  color: #FFFFFF;
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.4);
+}
+
+.role-tab-btn.active-admin {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #FFFFFF;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+}
+
+/* Backend status chip */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #6EE7B7;
+}
+.status-pill.mock {
+  background: rgba(249, 115, 22, 0.08);
+  border-color: rgba(249, 115, 22, 0.25);
+  color: #FDBA74;
+}
+
+/* --- 9. MODALS & DRAWERS --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 9, 7, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-spring);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-container {
+  background: var(--color-surface-modal);
+  border: 1px solid var(--border-emerald-subtle);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-modal);
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.96) translateY(12px);
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.modal-overlay.open .modal-container {
+  transform: scale(1) translateY(0);
+}
+
+.modal-header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-white);
+}
+
+.modal-close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-standard);
+}
+.modal-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #F87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.modal-body {
+  padding: 24px 28px;
+}
+
+.modal-footer {
+  padding: 16px 28px 24px;
+  border-top: 1px solid rgba(16, 185, 129, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* --- 10. FORM INPUTS & SELECTS --- */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.775rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  margin-bottom: 7px;
+}
+
+.form-control {
+  width: 100%;
+  background: var(--color-surface-sunken);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  color: var(--text-white);
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: var(--transition-standard);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-amber-primary);
+  box-shadow: 0 0 0 3px var(--accent-amber-glow);
+}
+
+.form-control::placeholder {
+  color: var(--text-dim);
+}
+
+/* Custom Range Slider for CGPA simulation */
+.pms-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #11251E;
+  border-radius: var(--radius-pill);
+  outline: none;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.pms-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-amber-primary);
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
+  border: 2px solid #FFFFFF;
+  transition: transform 0.15s ease;
+}
+
+.pms-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* --- 11. GLOBAL NOTIFICATION TOAST --- */
+#toastNotification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--color-surface-glass-heavy);
+  border: 1px solid var(--accent-emerald-primary);
+  color: var(--text-white);
+  padding: 14px 20px;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(16, 185, 129, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 120;
+  transform: translateY(100px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s var(--ease-spring), opacity 0.3s ease;
+}
+
+#toastNotification.show {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* --- 12. GRID & CARD LAYOUTS --- */
+.job-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+.stats-ribbon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.stat-metric-card {
+  background: var(--color-surface-sunken);
+  border: 1px solid rgba(16, 185, 129, 0.14);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+}
+
+.stat-label {
+  font-size: 0.725rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 4px;
+}
+
+/* --- 13. APPLICATION PIPELINE STEPPER --- */
+.pipeline-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 16px 0;
+}
+
+.pipeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+.pipeline-node {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #091410;
+  border: 2px solid rgba(16, 185, 129, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  transition: var(--transition-standard);
+}
+
+.pipeline-step.completed .pipeline-node {
+  background: var(--accent-emerald-primary);
+  border-color: #34D399;
+  color: #FFFFFF;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+}
+
+.pipeline-step.active .pipeline-node {
+  background: var(--accent-amber-primary);
+  border-color: #FB923C;
+  color: #FFFFFF;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.6);
+  animation: pulseAmber 2s infinite ease-in-out;
+}
+
+.pipeline-connector {
+  position: absolute;
+  top: 34px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: rgba(16, 185, 129, 0.15);
+  z-index: 1;
+}
+
+.pipeline-connector-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10B981 0%, #F97316 100%);
+  width: 75%;
+}
+
+/* --- 14. DATA TABLES --- */
+.pms-table-container {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-emerald-subtle);
+}
+
+.pms-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.825rem;
+}
+
+.pms-table th {
+  background: #0A1712;
+  padding: 12px 16px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.pms-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.08);
+  color: var(--text-primary);
+}
+
+.pms-table tr:hover td {
+  background: rgba(16, 185, 129, 0.035);
+}
+
+/* --- 15. RESPONSIVE DESIGN --- */
+@media (max-width: 840px) {
+  .top-nav {
+    padding: 0 16px;
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .role-pill-bar {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+  .job-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
