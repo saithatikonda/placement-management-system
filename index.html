@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Campus Placement Portal - Student Intelligence Suite</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
   <!-- Client-side PDF Parser Support -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
@@ -260,6 +265,105 @@
         width: 100%;
         justify-content: flex-start;
       }
+    }
+
+    /* ==========================================================================
+       DARK MODE HIGH-CONTRAST PALETTE OVERRIDES: DARK + ELECTRIC BLUE
+       Palette: Background #0B0F19 | Cards #151C2C | Accent #2979FF
+       ========================================================================== */
+    html.dark .apple-card {
+      background-color: #151C2C !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(41, 121, 255, 0.06) !important;
+    }
+
+    html.dark .apple-inner {
+      background-color: #192236 !important;
+      border-color: rgba(255, 255, 255, 0.07) !important;
+    }
+
+    html.dark h1, html.dark h2, html.dark h3, html.dark h4 {
+      color: #F8FAFC !important;
+    }
+
+    html.dark #report-title,
+    html.dark #report-title span {
+      color: #FFFFFF !important;
+    }
+
+    html.dark .btn-apple-primary {
+      background-color: #2979FF !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 14px rgba(41, 121, 255, 0.35) !important;
+    }
+
+    html.dark .btn-apple-primary:hover {
+      background-color: #448AFF !important;
+      box-shadow: 0 6px 20px rgba(41, 121, 255, 0.5) !important;
+    }
+
+    html.dark .btn-apple-secondary {
+      background-color: #192236 !important;
+      color: #E2E8F0 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    html.dark .btn-apple-secondary:hover {
+      background-color: #212C44 !important;
+      border-color: rgba(41, 121, 255, 0.4) !important;
+      color: #FFFFFF !important;
+    }
+
+    html.dark .dream-card {
+      background-color: #151C2C !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    html.dark .dream-card:hover {
+      border-color: #2979FF !important;
+    }
+
+    html.dark .dream-card.selected {
+      background-color: #192236 !important;
+      border-color: #2979FF !important;
+      box-shadow: 0 0 0 1.5px #2979FF, 0 8px 24px -4px rgba(41, 121, 255, 0.25) !important;
+    }
+
+    /* Dark Mode Text Colors */
+    html.dark .text-slate-900,
+    html.dark .text-slate-800,
+    html.dark .text-slate-700 {
+      color: #F1F5F9 !important;
+    }
+
+    html.dark .text-slate-600,
+    html.dark .text-slate-500 {
+      color: #94A3B8 !important;
+    }
+
+    html.dark .text-slate-400 {
+      color: #64748B !important;
+    }
+
+    /* Electric Blue Link & Accent text */
+    html.dark .text-blue-600 {
+      color: #40C4FF !important;
+    }
+
+    /* Dark Mode Inputs */
+    html.dark input, 
+    html.dark select, 
+    html.dark textarea {
+      background-color: #111726 !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      color: #F8FAFC !important;
+    }
+
+    html.dark input:focus, 
+    html.dark select:focus, 
+    html.dark textarea:focus {
+      border-color: #2979FF !important;
+      box-shadow: 0 0 0 2px rgba(41, 121, 255, 0.3) !important;
     }
   </style>
 </head>
