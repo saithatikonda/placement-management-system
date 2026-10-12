@@ -133,7 +133,22 @@ async function initDatabase() {
       );
     `);
 
-    console.log('[DB] Supabase tables verified (no mock data seeded).');
+    // Seed essential campus recruitment drives if table is empty
+    const driveCountRes = await client.query('SELECT COUNT(*)::int as count FROM public.job_drives;');
+    if (driveCountRes.rows[0].count === 0) {
+      await client.query(`
+        INSERT INTO public.job_drives (id, company, code, role, ctc, ctc_numeric, min_cgpa, eligible_branches, drive_date, status, location, jd_summary) VALUES
+        ('drive-amz-01', 'Amazon AWS', 'AMZ', 'SDE-1 (Distributed Systems)', '32.0 LPA', 32.0, 8.0, '["CSE", "IT"]'::jsonb, 'Oct 18, 2026', 'Active Registration', 'Bengaluru / Hyderabad', 'High-throughput cloud distributed storage and event architectures in Java/Go.'),
+        ('drive-ora-01', 'Oracle Cloud', 'ORA', 'Member of Technical Staff', '18.0 LPA', 18.0, 7.5, '["CSE", "IT", "ECE"]'::jsonb, 'Oct 22, 2026', 'Active Registration', 'Bengaluru', 'OCI core virtual networking, telemetry pipelines and multi-tenant cloud infra.'),
+        ('drive-str-01', 'Stripe India', 'STR', 'Backend Infrastructure Engineer', '34.5 LPA', 34.5, 8.5, '["CSE", "IT"]'::jsonb, 'Nov 02, 2026', 'Active Registration', 'Bengaluru / Remote', 'Global payment transaction settlement engines, ledger reliability, and Kafka pipelines.'),
+        ('drive-goo-01', 'Google India', 'GOO', 'Associate AI Research Engineer', '42.0 LPA', 42.0, 8.5, '["CSE", "IT"]'::jsonb, 'Oct 25, 2026', 'Active Registration', 'Bengaluru / Hyderabad', 'Transformer model optimization, multimodal RAG systems, and TPU acceleration.'),
+        ('drive-msft-01', 'Microsoft IDC', 'MSFT', 'Applied AI / LLM Scientist', '38.0 LPA', 38.0, 8.0, '["CSE", "IT", "ECE"]'::jsonb, 'Oct 29, 2026', 'Active Registration', 'Hyderabad / Noida', 'Generative AI copilot integrations, model fine-tuning and Azure cognitive services.'),
+        ('drive-cisc-01', 'Cisco Systems', 'CIS', 'Full-Stack Software Engineer', '19.5 LPA', 19.5, 7.0, '["CSE", "IT", "ECE"]'::jsonb, 'Nov 04, 2026', 'Active Registration', 'Bengaluru', 'Cloud enterprise monitoring portals, React 19, TypeScript and resilient microservices.');
+      `);
+      console.log('[DB] Seeded default campus recruitment drives.');
+    }
+
+    console.log('[DB] Supabase tables verified.');
     return true;
   } catch (error) {
     console.error('[DB] Error initializing database:', error.message);
