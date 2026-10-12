@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Building2, Plus, Sparkles, AlertCircle } from 'lucide-react';
+import { X, Building2, Sparkles } from 'lucide-react';
 import { JobDrive } from '../../types/pms';
 
 interface PostJobDriveModalProps {
@@ -36,7 +36,7 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
       id: `drive-${Date.now()}`,
       companyName,
       companyLogo: companyName.substring(0, 4).toUpperCase(),
-      logoBg: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
+      logoBg: 'bg-[#0071E3]/10 text-[#0071E3]',
       role,
       ctc: `${numericCtc.toFixed(1)} LPA`,
       ctcNumeric: numericCtc,
@@ -73,26 +73,26 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="bg-[#13221C] border border-[#1D362C] rounded-2xl w-full max-w-xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-md">
+      <div className="apple-card w-full max-w-xl shadow-[0_24px_64px_rgba(0,0,0,0.16)] overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-[#1D362C] flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-black/[0.06] flex items-center justify-between bg-[#FBFBFC]">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-[#F97316]/15 border border-[#F97316]/30 text-[#F97316]">
+            <div className="p-2 rounded-xl bg-[#0071E3]/10 text-[#0071E3]">
               <Building2 className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#F1F5F9]">
+              <h3 className="text-base font-bold text-[#1D1D1F]">
                 Post New Campus Recruitment Drive
               </h3>
-              <p className="text-xs text-[#94A3B8]">
-                Publish drive to student portals and initialize automated shortlisting filters
+              <p className="text-xs text-[#6E6E73]">
+                Publish drive to student portals and initialize shortlisting filters
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#182C24] rounded-lg transition-colors"
+            className="p-1.5 text-[#86868B] hover:text-[#1D1D1F] hover:bg-black/[0.05] rounded-full transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -102,7 +102,7 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1">
+              <label className="block text-xs font-semibold text-[#1D1D1F] mb-1">
                 Company Name *
               </label>
               <input
@@ -110,13 +110,13 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
                 required
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
-                placeholder="e.g. Stripe, Palantir, Cisco"
-                className="w-full px-3 py-2 bg-[#0B1612] border border-[#1D362C] focus:border-emerald-500/50 rounded-xl text-xs text-[#F1F5F9] outline-none"
+                placeholder="e.g. Stripe, Apple, Microsoft"
+                className="w-full px-3 py-2 bg-[#FBFBFC] border border-black/[0.08] focus:bg-white focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1">
+              <label className="block text-xs font-semibold text-[#1D1D1F] mb-1">
                 Role Title *
               </label>
               <input
@@ -124,15 +124,15 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
                 required
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                placeholder="e.g. SDE-1, Cloud Engineer"
-                className="w-full px-3 py-2 bg-[#0B1612] border border-[#1D362C] focus:border-emerald-500/50 rounded-xl text-xs text-[#F1F5F9] outline-none"
+                placeholder="e.g. Software Engineer I"
+                className="w-full px-3 py-2 bg-[#FBFBFC] border border-black/[0.08] focus:bg-white focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] outline-none transition-all"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#FB923C] font-bold mb-1">
+              <label className="block text-xs font-semibold text-[#0071E3] mb-1">
                 CTC (LPA) *
               </label>
               <input
@@ -141,14 +141,14 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
                 required
                 value={ctc}
                 onChange={(e) => setCtc(e.target.value)}
-                placeholder="44.0"
-                className="w-full px-3 py-2 bg-[#0B1612] border border-[#F97316]/40 focus:border-[#F97316] rounded-xl text-xs font-mono font-bold text-[#F97316] outline-none"
+                placeholder="32.0"
+                className="w-full px-3 py-2 bg-[#FBFBFC] border border-black/[0.08] focus:bg-white focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl text-xs font-mono font-bold text-[#0071E3] outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1">
-                Min CGPA
+              <label className="block text-xs font-semibold text-[#1D1D1F] mb-1">
+                Min CGPA Cutoff
               </label>
               <input
                 type="number"
@@ -156,18 +156,18 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
                 value={minCgpa}
                 onChange={(e) => setMinCgpa(e.target.value)}
                 placeholder="7.5"
-                className="w-full px-3 py-2 bg-[#0B1612] border border-[#1D362C] focus:border-emerald-500/50 rounded-xl text-xs font-mono text-emerald-400 outline-none"
+                className="w-full px-3 py-2 bg-[#FBFBFC] border border-black/[0.08] focus:bg-white focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl text-xs font-mono text-[#1D1D1F] outline-none transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1">
+              <label className="block text-xs font-semibold text-[#1D1D1F] mb-1">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
-                className="w-full px-2.5 py-2 bg-[#0B1612] border border-[#1D362C] rounded-xl text-xs text-[#F1F5F9] outline-none cursor-pointer"
+                className="w-full px-2.5 py-2 bg-[#FBFBFC] border border-black/[0.08] rounded-xl text-xs text-[#1D1D1F] outline-none cursor-pointer"
               >
                 <option value="Super Dream">Super Dream (&ge; 25 LPA)</option>
                 <option value="Dream">Dream (12 - 24 LPA)</option>
@@ -178,7 +178,7 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
 
           {/* Eligible Branches */}
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1.5">
+            <label className="block text-xs font-semibold text-[#1D1D1F] mb-1.5">
               Eligible Engineering Branches
             </label>
             <div className="flex items-center gap-2 flex-wrap">
@@ -187,10 +187,10 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
                   type="button"
                   key={b}
                   onClick={() => toggleBranch(b)}
-                  className={`px-3 py-1 rounded-lg text-xs font-mono font-semibold transition-all ${
+                  className={`px-3 py-1 rounded-full text-xs font-mono font-semibold transition-all cursor-pointer ${
                     branches.includes(b)
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                      : 'bg-[#0B1612] text-[#94A3B8] border border-[#1D362C]'
+                      ? 'bg-[#0071E3] text-white shadow-2xs'
+                      : 'bg-black/[0.04] text-[#6E6E73] hover:text-[#1D1D1F]'
                   }`}
                 >
                   {b}
@@ -201,7 +201,7 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
 
           {/* Job Description */}
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1">
+            <label className="block text-xs font-semibold text-[#1D1D1F] mb-1">
               Role Summary & Requirements
             </label>
             <textarea
@@ -209,28 +209,22 @@ export const PostJobDriveModal: React.FC<PostJobDriveModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Responsibilities, tech stack, key requirements..."
-              className="w-full px-3 py-2 bg-[#0B1612] border border-[#1D362C] focus:border-emerald-500/50 rounded-xl text-xs text-[#F1F5F9] outline-none"
+              className="w-full px-3 py-2 bg-[#FBFBFC] border border-black/[0.08] focus:bg-white focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] outline-none transition-all leading-relaxed"
             />
           </div>
 
-          {/* Spring Boot REST API note */}
-          <div className="p-3 bg-[#0B1612] border border-[#1D362C] rounded-xl flex items-center justify-between text-[11px] text-[#94A3B8]">
-            <span>Spring Boot REST hook:</span>
-            <code className="text-emerald-400 font-mono">POST /api/v1/recruitment-drives</code>
-          </div>
-
           {/* Modal Actions */}
-          <div className="pt-2 flex items-center justify-end gap-3">
+          <div className="pt-2 flex items-center justify-end gap-3 border-t border-black/[0.06]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-[#0B1612] hover:bg-[#182C24] border border-[#1D362C] text-[#94A3B8] hover:text-[#F1F5F9] rounded-xl text-xs font-semibold transition-colors"
+              className="px-4 py-2 bg-black/[0.04] hover:bg-black/[0.08] text-[#1D1D1F] rounded-xl text-xs font-semibold transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-[#F97316] hover:bg-[#EA580C] text-white rounded-xl text-xs font-bold shadow-[0_0_16px_rgba(249,115,22,0.35)] active:scale-[0.98] transition-all flex items-center gap-1.5"
+              className="px-5 py-2 bg-[#0071E3] hover:bg-[#0077ED] text-white rounded-xl text-xs font-semibold shadow-[0_2px_8px_rgba(0,113,227,0.25)] active:scale-[0.98] transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Publish Drive</span>

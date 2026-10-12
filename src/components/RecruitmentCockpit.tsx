@@ -21,10 +21,7 @@ import {
   MoreVertical, 
   ChevronDown, 
   Sparkles,
-  Award,
-  Filter,
-  FileCheck2,
-  AlertTriangle
+  FileCheck2
 } from 'lucide-react';
 import { CandidateEntry, KPIMetrics, JobDrive } from '../types/pms';
 
@@ -154,13 +151,13 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
         return c;
       })
     );
-    showToast(`✓ Promoted ${name} to the next recruitment evaluation round!`);
+    showToast(`✓ Promoted ${name} to next interview round`);
   };
 
   // Candidate action: Reject candidate
   const rejectCandidate = (id: string, name: string) => {
     setCandidates((prev) => prev.filter((c) => c.id !== id));
-    showToast(`Candidate ${name} archived from current drive shortlist.`);
+    showToast(`Candidate ${name} archived from shortlist`);
   };
 
   // Bulk action: Mark OA Passed
@@ -168,7 +165,7 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
     setCandidates((prev) =>
       prev.map((c) => (c.selected ? { ...c, driveStage: 'OA Cleared' } : c))
     );
-    showToast(`✓ Marked ${selectedCount} candidates as OA Cleared!`);
+    showToast(`✓ Marked ${selectedCount} candidates as OA Cleared`);
   };
 
   // Reset Filters
@@ -179,15 +176,15 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
     setStageFilter('All');
     setSearchQuery('');
     setGenderFilter('All');
-    showToast('Filters reset to default institutional profile.');
+    showToast('Filters reset to default');
   };
 
   return (
     <div className="flex flex-col w-full pb-12 relative">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#13221C] border border-emerald-500/50 text-[#F1F5F9] px-4 py-3 rounded-xl shadow-[0_16px_36px_rgba(0,0,0,0.85)] flex items-center gap-3 animate-bounce">
-          <Sparkles className="w-4 h-4 text-emerald-400" />
+        <div className="fixed bottom-6 right-6 z-50 bg-white/95 backdrop-blur-xl border border-black/[0.08] text-[#1D1D1F] px-4 py-3 rounded-2xl shadow-[0_12px_32px_rgba(0,0,0,0.12)] flex items-center gap-2.5 animate-in fade-in duration-150">
+          <CheckCircle2 className="w-4 h-4 text-[#0071E3]" />
           <span className="text-xs font-semibold">{toastMessage}</span>
         </div>
       )}
@@ -197,39 +194,38 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-4">
           {/* Breadcrumb & Context Flag */}
           <div className="flex flex-col gap-1 min-w-0">
-            <div className="flex items-center gap-2 text-xs text-[#94A3B8]">
-              <span className="inline-flex items-center gap-1 font-semibold text-emerald-400">
+            <div className="flex items-center gap-2 text-xs text-[#86868B]">
+              <span className="font-semibold text-[#0071E3]">
                 Academic Year 2025–26
               </span>
               <span>•</span>
               <span>Campus Recruitment Division</span>
               <span>•</span>
-              <span className="px-2 py-0.5 rounded bg-[#13221C] border border-[#1D362C] text-[#F1F5F9] font-medium text-[11px]">
+              <span className="px-2 py-0.5 rounded-full bg-black/[0.04] text-[#1D1D1F] font-semibold text-[11px]">
                 Cohort A-1
               </span>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap mt-1">
-              <h1 className="text-2xl lg:text-3xl font-extrabold text-[#F1F5F9] tracking-tight leading-tight">
-                Active Recruitment Drives{' '}
-                <span className="text-xl font-normal text-[#94A3B8]">(2026 Batch)</span>
+              <h1 className="text-2xl lg:text-3xl font-bold text-[#1D1D1F] tracking-tight leading-tight">
+                Recruitment Operations Cockpit{' '}
+                <span className="text-xl font-normal text-[#86868B]">(Class of 2026)</span>
               </h1>
 
-              {/* Drive Quick Switcher Pill with Warm Luminous Accent */}
-              <div className="flex items-center gap-2 bg-[#13221C] border border-[#1D362C] hover:border-emerald-500/40 px-3.5 py-1.5 rounded-full shadow-sm transition-all cursor-pointer group">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="text-[10px] uppercase tracking-wider text-[#94A3B8] font-bold">
-                  Drive:
+              {/* Drive Quick Switcher Pill */}
+              <div className="flex items-center gap-2 bg-white border border-black/[0.08] px-3.5 py-1.5 rounded-full shadow-2xs transition-all cursor-pointer group">
+                <span className="w-2 h-2 rounded-full bg-[#34C759] animate-pulse"></span>
+                <span className="text-[10px] uppercase tracking-wider text-[#86868B] font-semibold">
+                  Active Drive:
                 </span>
-                <span className="font-bold text-emerald-400 text-xs">
-                  {activeDrive.companyName} — {activeDrive.role.split('(')[0].trim()}
+                <span className="font-semibold text-[#0071E3] text-xs">
+                  {activeDrive ? `${activeDrive.companyName} — ${activeDrive.role?.split('(')[0]?.trim() || ''}` : 'No Active Drives'}
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#94A3B8] group-hover:text-[#F1F5F9] transition-transform group-hover:rotate-180" />
               </div>
             </div>
 
-            <p className="text-xs text-[#94A3B8] mt-0.5">
-              Real-time overview of current candidate pipelines, eligibility filters, and drive progress across university departments.
+            <p className="text-xs text-[#6E6E73] mt-0.5">
+              Real-time shortlisting engine, eligibility cutoffs, and applicant pipeline management across all departments.
             </p>
           </div>
 
@@ -239,28 +235,27 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
             <button
               onClick={onExportCsv}
               type="button"
-              className="inline-flex items-center gap-2 px-3.5 py-2 bg-[#13221C] hover:bg-[#182C24] text-[#F1F5F9] border border-[#1D362C] font-semibold text-xs rounded-xl shadow-sm active:scale-[0.98] transition-all"
+              className="inline-flex items-center gap-2 px-3.5 py-2 bg-white hover:bg-black/[0.02] text-[#1D1D1F] border border-black/[0.08] font-semibold text-xs rounded-xl shadow-2xs active:scale-[0.98] transition-all cursor-pointer"
             >
-              <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
-              <span>Export to Excel / CSV</span>
-              <ChevronDown className="w-3.5 h-3.5 text-[#94A3B8]" />
+              <FileSpreadsheet className="w-4 h-4 text-[#0071E3]" />
+              <span>Export CSV</span>
             </button>
 
             {/* ERP Batch Sync */}
             <button
               onClick={onSyncErp}
               type="button"
-              className="inline-flex items-center gap-2 px-3.5 py-2 bg-[#13221C] hover:bg-[#182C24] text-[#F1F5F9] border border-[#1D362C] font-semibold text-xs rounded-xl shadow-sm active:scale-[0.98] transition-all"
+              className="inline-flex items-center gap-2 px-3.5 py-2 bg-white hover:bg-black/[0.02] text-[#1D1D1F] border border-black/[0.08] font-semibold text-xs rounded-xl shadow-2xs active:scale-[0.98] transition-all cursor-pointer"
             >
-              <RefreshCw className="w-4 h-4 text-[#94A3B8]" />
-              <span>ERP Batch Sync</span>
+              <RefreshCw className="w-4 h-4 text-[#86868B]" />
+              <span>ERP Sync</span>
             </button>
 
-            {/* Primary Create Drive Button with Warm Orange Glow Accent */}
+            {/* Primary Create Drive Button */}
             <button
               onClick={onPostNewDrive}
               type="button"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#F97316] hover:bg-[#EA580C] text-white font-bold text-xs rounded-xl shadow-[0_0_20px_rgba(249,115,22,0.35)] active:scale-[0.98] transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#0071E3] hover:bg-[#0077ED] text-white font-semibold text-xs rounded-xl shadow-[0_2px_8px_rgba(0,113,227,0.25)] active:scale-[0.98] transition-all cursor-pointer"
             >
               <PlusCircle className="w-4 h-4 text-white" />
               <span>+ Post New Job Drive</span>
@@ -269,42 +264,42 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
         </div>
       </div>
 
-      {/* Metric KPI Cards (4-Column Enterprise Cockpit Grid) */}
+      {/* Metric KPI Cards (4-Column Apple Grid) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {/* KPI Card 1: Eligible Students */}
-        <div className="pms-card rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden">
+        <div className="apple-card p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div className="flex flex-col">
-              <span className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold">
-                Total Eligible Students
+              <span className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
+                Total Cohort Enrolled
               </span>
               <div className="flex items-baseline gap-2.5 mt-1.5">
-                <span className="text-3xl font-extrabold font-mono text-[#F1F5F9] tracking-tight">
+                <span className="text-3xl font-bold font-mono text-[#1D1D1F] tracking-tight">
                   {kpis.totalEligible}
                 </span>
-                <span className="inline-flex items-center text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+                <span className="inline-flex items-center text-xs font-semibold px-2 py-0.5 rounded-full bg-[#34C759]/10 text-[#28A745]">
                   <TrendingUp className="w-3 h-3 mr-1" />
                   {kpis.yoyGrowth}
                 </span>
               </div>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center shrink-0">
               <Users className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#1D362C]">
+          <div className="mt-4 pt-3 border-t border-black/[0.06]">
             <div className="flex justify-between items-center text-xs mb-1.5">
-              <span className="text-[#94A3B8] text-[11px]">
-                Cohort Readiness ({kpis.enrolledStudents} Enrolled)
+              <span className="text-[#6E6E73] text-[11px]">
+                Placement Ready ({kpis.enrolledStudents} Enrolled)
               </span>
-              <span className="font-mono font-semibold text-emerald-400">
+              <span className="font-mono font-semibold text-[#0071E3]">
                 {kpis.cohortReadinessPercent}%
               </span>
             </div>
-            <div className="w-full bg-[#0B1612] rounded-full h-1.5 overflow-hidden border border-[#1D362C]/40">
+            <div className="w-full bg-[#F2F2F7] rounded-full h-1.5 overflow-hidden">
               <div
-                className="bg-emerald-500 h-1.5 rounded-full transition-all duration-700"
+                className="bg-[#0071E3] h-1.5 rounded-full transition-all duration-700"
                 style={{ width: `${kpis.cohortReadinessPercent}%` }}
               ></div>
             </div>
@@ -312,129 +307,125 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
         </div>
 
         {/* KPI Card 2: Placed Students */}
-        <div className="pms-card rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden">
+        <div className="apple-card p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div className="flex flex-col">
-              <span className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold">
+              <span className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
                 Placed Students
               </span>
               <div className="flex items-baseline gap-2.5 mt-1.5">
-                <span className="text-3xl font-extrabold font-mono text-[#F1F5F9] tracking-tight">
+                <span className="text-3xl font-bold font-mono text-[#1D1D1F] tracking-tight">
                   {kpis.placedStudents}
                 </span>
-                <span className="text-xs font-bold text-emerald-400">
-                  {kpis.placementRate}% Overall Rate
+                <span className="text-xs font-semibold text-[#34C759]">
+                  {kpis.placementRate}% Overall
                 </span>
               </div>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#34C759]/10 text-[#34C759] flex items-center justify-center shrink-0">
               <CheckCircle2 className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#1D362C]">
+          <div className="mt-4 pt-3 border-t border-black/[0.06]">
             <div className="flex justify-between items-center text-xs mb-1.5">
-              <span className="text-[#94A3B8] text-[11px]">
-                {kpis.uniquePlaced} Unique • 123 Dream
+              <span className="text-[#6E6E73] text-[11px]">
+                {kpis.uniquePlaced} Unique • Target {kpis.dreamTarget}%
               </span>
-              <span className="text-[#94A3B8] text-[11px]">Target {kpis.dreamTarget}%</span>
+              <span className="text-[#34C759] font-semibold text-[11px]">{kpis.placementRate}%</span>
             </div>
-            <div className="w-full bg-[#0B1612] rounded-full h-1.5 overflow-hidden relative border border-[#1D362C]/40">
+            <div className="w-full bg-[#F2F2F7] rounded-full h-1.5 overflow-hidden">
               <div
-                className="bg-emerald-400 h-1.5 rounded-full"
+                className="bg-[#34C759] h-1.5 rounded-full transition-all duration-700"
                 style={{ width: `${kpis.placementRate}%` }}
-              ></div>
-              <div
-                className="absolute top-0 bottom-0 w-0.5 bg-[#F97316] z-10"
-                style={{ left: `${kpis.dreamTarget}%` }}
               ></div>
             </div>
           </div>
         </div>
 
         {/* KPI Card 3: Companies Visited */}
-        <div className="pms-card rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden">
+        <div className="apple-card p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div className="flex flex-col">
-              <span className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold">
+              <span className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
                 Companies Visited
               </span>
               <div className="flex items-baseline gap-2.5 mt-1.5">
-                <span className="text-3xl font-extrabold font-mono text-[#F1F5F9] tracking-tight">
+                <span className="text-3xl font-bold font-mono text-[#1D1D1F] tracking-tight">
                   {kpis.companiesVisited}
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  {kpis.onSiteToday} On-Site Today
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#0071E3]/10 text-[#0071E3]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0071E3] animate-pulse"></span>
+                  {kpis.onSiteToday} Today
                 </span>
               </div>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center shrink-0">
               <Building2 className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#1D362C] flex items-center justify-between text-xs">
-            <span className="text-[#94A3B8] text-[11px]">{kpis.tier1Day1s} Tier-1 Day 1s</span>
-            <span className="inline-flex items-center gap-1 font-semibold text-emerald-400 text-xs">
-              <Clock className="w-3.5 h-3.5" /> {kpis.inProgressDrives} In Progress
+          <div className="mt-4 pt-3 border-t border-black/[0.06] flex items-center justify-between text-xs">
+            <span className="text-[#6E6E73] text-[11px]">{kpis.tier1Day1s} Tier-1 Day 1s</span>
+            <span className="inline-flex items-center gap-1 font-semibold text-[#0071E3] text-xs">
+              <Clock className="w-3.5 h-3.5" /> {kpis.inProgressDrives} Drives Active
             </span>
           </div>
         </div>
 
-        {/* KPI Card 4: CTC Compensation Metrics with Warm Luminous Orange Accent */}
-        <div className="pms-card rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden border border-[#F97316]/30 shadow-[0_12px_32px_rgba(249,115,22,0.1)]">
+        {/* KPI Card 4: CTC Compensation Metrics */}
+        <div className="apple-card p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div className="flex flex-col">
-              <span className="text-[11px] uppercase tracking-wider text-[#FB923C] font-bold">
-                CTC Compensation Metrics
+              <span className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
+                Compensation Metrics
               </span>
               <div className="flex items-baseline gap-4 mt-1.5">
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-[#94A3B8] font-medium">Highest</span>
-                  <span className="text-2xl font-black font-mono text-[#F97316] drop-shadow-[0_0_12px_rgba(249,115,22,0.3)]">
+                  <span className="text-[10px] text-[#86868B] font-medium">Highest</span>
+                  <span className="text-2xl font-bold font-mono text-[#0071E3]">
                     {kpis.highestCtc.toFixed(1)}{' '}
-                    <span className="text-xs font-normal text-[#94A3B8]">LPA</span>
+                    <span className="text-xs font-normal text-[#86868B]">LPA</span>
                   </span>
                 </div>
-                <div className="w-px h-8 bg-[#1D362C]"></div>
+                <div className="w-px h-8 bg-black/[0.06]"></div>
                 <div className="flex flex-col">
-                  <span className="text-[10px] text-[#94A3B8] font-medium">Average</span>
-                  <span className="text-2xl font-black font-mono text-emerald-400">
+                  <span className="text-[10px] text-[#86868B] font-medium">Average</span>
+                  <span className="text-2xl font-bold font-mono text-[#1D1D1F]">
                     {kpis.averageCtc.toFixed(1)}{' '}
-                    <span className="text-xs font-normal text-[#94A3B8]">LPA</span>
+                    <span className="text-xs font-normal text-[#86868B]">LPA</span>
                   </span>
                 </div>
               </div>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-[#F97316]/15 border border-[#F97316]/30 flex items-center justify-center text-[#F97316] shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center shrink-0">
               <Coins className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#1D362C] flex items-center justify-between text-xs">
-            <span className="text-[#94A3B8] text-[11px]">
+          <div className="mt-4 pt-3 border-t border-black/[0.06] flex items-center justify-between text-xs">
+            <span className="text-[#6E6E73] text-[11px]">
               Median: {kpis.medianCtc} LPA • Top 10%: {kpis.top10Ctc} LPA
             </span>
-            <span className="px-2 py-0.5 rounded bg-[#F97316]/15 border border-[#F97316]/30 text-[#FB923C] font-bold text-[10px] uppercase tracking-wide">
+            <span className="px-2 py-0.5 rounded-full bg-[#0071E3]/10 text-[#0071E3] font-semibold text-[10px] uppercase">
               Super Dream: {kpis.superDreamCount}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Automated Candidate Filtering Engine Container */}
-      <div className="pms-card rounded-2xl p-5 mb-5 flex flex-col gap-4 border border-[#1D362C]">
+      {/* Candidate Shortlisting Filter Engine - Apple Card */}
+      <div className="apple-card p-5 mb-5 flex flex-col gap-4">
         {/* Filter Bar Header & Counts */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#1D362C]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
           <div className="flex items-center gap-3">
-            <div className="p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
+            <div className="p-1.5 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center">
               <SlidersHorizontal className="w-4 h-4" />
             </div>
-            <span className="text-sm font-bold text-[#F1F5F9]">
-              Active Candidate Filter Engine
+            <span className="text-sm font-bold text-[#1D1D1F]">
+              Shortlisting Filter Engine
             </span>
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-bold">
+            <span className="px-2.5 py-0.5 rounded-full bg-black/[0.05] text-[#1D1D1F] font-mono text-xs font-semibold">
               Showing {filteredCandidates.length} of {candidates.length} Registered Candidates
             </span>
           </div>
@@ -442,19 +433,19 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
           <div className="flex items-center gap-4 text-xs">
             <button
               onClick={resetFilters}
-              className="text-[#94A3B8] hover:text-[#F1F5F9] transition-colors flex items-center gap-1.5 font-medium"
+              className="text-[#86868B] hover:text-[#1D1D1F] transition-colors flex items-center gap-1.5 font-medium cursor-pointer"
               type="button"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reset Filters</span>
             </button>
             <button
-              onClick={() => showToast('Preset rule saved to University Placement Engine!')}
-              className="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1.5 font-bold"
+              onClick={() => showToast('Shortlist parameters synchronized')}
+              className="text-[#0071E3] hover:text-[#0077ED] transition-colors flex items-center gap-1.5 font-semibold cursor-pointer"
               type="button"
             >
               <BookmarkCheck className="w-3.5 h-3.5" />
-              <span>Save as Preset Rule</span>
+              <span>Save Preset</span>
             </button>
           </div>
         </div>
@@ -464,16 +455,16 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
           {/* 1. CGPA Slider & Indicator */}
           <div className="lg:col-span-3 flex flex-col gap-1.5">
             <div className="flex justify-between items-center text-xs">
-              <label className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold">
+              <label className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
                 Min Cumulative CGPA
               </label>
-              <span className="font-mono font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30 text-xs">
+              <span className="font-mono font-bold text-[#0071E3] px-2 py-0.5 rounded-md bg-[#0071E3]/10 text-xs">
                 ≥ {minCgpa.toFixed(2)} / 10.0
               </span>
             </div>
             <div className="flex items-center gap-2 mt-1">
               <input
-                className="w-full accent-emerald-500 h-1.5 bg-[#0B1612] rounded cursor-pointer"
+                className="w-full cursor-pointer"
                 max="9.5"
                 min="6.0"
                 step="0.25"
@@ -481,32 +472,32 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
                 value={minCgpa}
                 onChange={(e) => setMinCgpa(parseFloat(e.target.value))}
               />
-              <span className="text-xs font-mono text-[#94A3B8] font-medium w-8">
+              <span className="text-xs font-mono text-[#1D1D1F] font-semibold w-8">
                 {minCgpa.toFixed(2)}
               </span>
             </div>
-            <div className="flex justify-between text-[10px] text-[#94A3B8]/80 font-mono">
+            <div className="flex justify-between text-[10px] text-[#86868B] font-mono">
               <span>6.0</span>
               <span>7.0</span>
-              <span className="text-emerald-400 font-bold">7.5</span>
+              <span className="text-[#0071E3] font-bold">7.5</span>
               <span>8.5</span>
-              <span>10.0</span>
+              <span>9.5</span>
             </div>
           </div>
 
           {/* 2. Backlog Status Pills */}
           <div className="lg:col-span-3 flex flex-col gap-1.5">
-            <label className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold">
+            <label className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
               Backlog Eligibility
             </label>
-            <div className="flex items-center gap-1.5 mt-1">
+            <div className="bg-black/[0.05] p-1 rounded-full flex items-center gap-1 mt-1">
               <button
                 type="button"
                 onClick={() => setBacklogFilter('zero')}
-                className={`flex-1 inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`flex-1 inline-flex items-center justify-center gap-1 py-1 px-2.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   backlogFilter === 'zero'
-                    ? 'bg-emerald-600 text-white shadow-[0_0_12px_rgba(16,185,129,0.35)]'
-                    : 'bg-[#0B1612] text-[#94A3B8] border border-[#1D362C] hover:text-[#F1F5F9]'
+                    ? 'bg-white text-[#1D1D1F] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                    : 'text-[#6E6E73] hover:text-[#1D1D1F]'
                 }`}
               >
                 <Check className="w-3.5 h-3.5" />
@@ -515,20 +506,20 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
               <button
                 type="button"
                 onClick={() => setBacklogFilter('history')}
-                className={`flex-1 inline-flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                className={`flex-1 inline-flex items-center justify-center gap-1 py-1 px-2.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   backlogFilter === 'history'
-                    ? 'bg-emerald-600 text-white shadow-[0_0_12px_rgba(16,185,129,0.35)]'
-                    : 'bg-[#0B1612] text-[#94A3B8] border border-[#1D362C] hover:text-[#F1F5F9]'
+                    ? 'bg-white text-[#1D1D1F] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                    : 'text-[#6E6E73] hover:text-[#1D1D1F]'
                 }`}
               >
-                History Cleared
+                History Clear
               </button>
             </div>
           </div>
 
-          {/* 3. Branch Multi-select Dropdown / Pills */}
+          {/* 3. Branch Multi-select Pills */}
           <div className="lg:col-span-3 flex flex-col gap-1.5">
-            <label className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold">
+            <label className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
               Eligible Branches
             </label>
             <div className="flex items-center gap-1.5 flex-wrap mt-1">
@@ -539,10 +530,10 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
                     key={br}
                     type="button"
                     onClick={() => toggleBranch(br)}
-                    className={`px-2 py-1 rounded text-[11px] font-mono font-bold transition-all ${
+                    className={`px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                        : 'bg-[#0B1612] text-[#94A3B8] border border-[#1D362C] hover:text-[#F1F5F9]'
+                        ? 'bg-[#0071E3] text-white shadow-2xs'
+                        : 'bg-black/[0.04] text-[#6E6E73] hover:text-[#1D1D1F]'
                     }`}
                   >
                     {br}
@@ -554,22 +545,22 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
 
           {/* 4. Gender & Demographics */}
           <div className="lg:col-span-3 flex flex-col gap-1.5">
-            <label className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold">
-              Gender Quota View
+            <label className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
+              Gender Diversity
             </label>
-            <div className="flex items-center gap-1 mt-1">
+            <div className="bg-black/[0.05] p-1 rounded-full flex items-center gap-1 mt-1">
               {(['All', 'Female', 'Male'] as const).map((g) => (
                 <button
                   key={g}
                   type="button"
                   onClick={() => setGenderFilter(g)}
-                  className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex-1 py-1 px-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     genderFilter === g
-                      ? 'bg-emerald-600 text-white shadow-[0_0_10px_rgba(16,185,129,0.3)]'
-                      : 'bg-[#0B1612] text-[#94A3B8] border border-[#1D362C] hover:text-[#F1F5F9]'
+                      ? 'bg-white text-[#1D1D1F] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                      : 'text-[#6E6E73] hover:text-[#1D1D1F]'
                   }`}
                 >
-                  {g === 'All' ? 'All (68 F / 74 M)' : g}
+                  {g}
                 </button>
               ))}
             </div>
@@ -577,83 +568,78 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
         </div>
 
         {/* Round / Pipeline Phase Badges Row */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-[#1D362C]">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-black/[0.06]">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mr-1">
-              Stage Filter:
+            <span className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold mr-1">
+              Stage:
             </span>
-            {[
-              { id: 'All', label: `All Qualified (${candidates.length})` },
-              { id: 'OA Cleared', label: 'OA Cleared (88)' },
-              { id: 'Tech Interview', label: 'Tech Interview (42)' },
-              { id: 'HR Round', label: 'HR Round (12)' },
-            ].map((st) => (
-              <button
-                key={st.id}
-                onClick={() => setStageFilter(st.id)}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                  stageFilter === st.id
-                    ? 'bg-emerald-500 text-white shadow-[0_0_12px_rgba(16,185,129,0.4)]'
-                    : 'bg-[#0B1612] text-[#94A3B8] border border-[#1D362C] hover:text-[#F1F5F9]'
-                }`}
-                type="button"
-              >
-                {st.label}
-              </button>
-            ))}
+            <div className="bg-black/[0.05] p-1 rounded-full flex items-center gap-1">
+              {[
+                { id: 'All', label: 'All Qualified' },
+                { id: 'OA Cleared', label: 'OA Cleared' },
+                { id: 'Tech Interview', label: 'Tech Round' },
+                { id: 'HR Round', label: 'HR Round' },
+              ].map((st) => (
+                <button
+                  key={st.id}
+                  onClick={() => setStageFilter(st.id)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                    stageFilter === st.id
+                      ? 'bg-white text-[#1D1D1F] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                      : 'text-[#6E6E73] hover:text-[#1D1D1F]'
+                  }`}
+                  type="button"
+                >
+                  {st.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="relative">
               <input
-                className="pl-7 pr-3 py-1.5 bg-[#0B1612] border border-[#1D362C] focus:border-emerald-500/40 rounded-lg text-xs text-[#F1F5F9] placeholder:text-[#94A3B8] outline-none w-64 transition-all"
-                placeholder="Filter candidate name or roll..."
+                className="pl-8 pr-3 py-1.5 bg-[#FBFBFC] border border-black/[0.08] focus:bg-white focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] placeholder:text-[#A1A1A6] outline-none w-64 transition-all"
+                placeholder="Search candidate name or roll..."
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <Search className="w-3.5 h-3.5 text-[#94A3B8] absolute left-2.5 top-2" />
+              <Search className="w-3.5 h-3.5 text-[#86868B] absolute left-2.5 top-2.5" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Floating Bulk Shortlist Action Banner with High Contrast Dark Theme */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 px-5 bg-[#182C24] border border-[#1D362C] text-[#F1F5F9] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.6)] mb-4">
+      {/* Bulk Action Bar - Apple Light Pill */}
+      <div className="flex flex-wrap items-center justify-between gap-4 p-3.5 px-5 apple-card mb-4 bg-[#FBFBFC]">
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2.5 cursor-pointer select-none">
             <input
               checked={isAllSelected}
               onChange={toggleSelectAll}
-              className="w-4 h-4 accent-emerald-500 rounded cursor-pointer"
+              className="w-4 h-4 text-[#0071E3] rounded cursor-pointer"
               type="checkbox"
             />
-            <span className="font-bold text-xs text-[#F1F5F9]">
-              {selectedCount} Candidates Selected (Active Filter)
+            <span className="font-bold text-xs text-[#1D1D1F]">
+              {selectedCount} Candidates Selected
             </span>
           </label>
 
-          <div className="hidden sm:flex items-center gap-1.5 pl-4 border-l border-[#1D362C]">
+          <div className="hidden sm:flex items-center gap-1.5 pl-4 border-l border-black/[0.08]">
             <button
               onClick={bulkMarkOaPassed}
-              className="px-2.5 py-1 rounded bg-[#0B1612] hover:bg-[#13221C] border border-[#1D362C] text-[11px] font-semibold text-emerald-300 transition-colors"
+              className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-black/[0.08] text-[11px] font-semibold text-[#1D1D1F] transition-colors cursor-pointer"
               type="button"
             >
               Mark OA Passed
             </button>
             <button
-              onClick={() => showToast(`Sent interview slot invites to ${selectedCount} candidates!`)}
-              className="px-2.5 py-1 rounded bg-[#0B1612] hover:bg-[#13221C] border border-[#1D362C] text-[11px] font-semibold text-[#94A3B8] hover:text-[#F1F5F9] transition-colors"
+              onClick={() => showToast(`Dispatched interview slot invitations to ${selectedCount} candidates`)}
+              className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-black/[0.08] text-[11px] font-semibold text-[#6E6E73] hover:text-[#1D1D1F] transition-colors cursor-pointer"
               type="button"
             >
               Send Slot Invite
-            </button>
-            <button
-              onClick={() => showToast(`Checked candidate placement caps. All within quota.`)}
-              className="px-2.5 py-1 rounded bg-[#0B1612] hover:bg-rose-950/40 border border-rose-900/40 text-[11px] font-semibold text-rose-400 transition-colors"
-              type="button"
-            >
-              Exclude Quota Exceeded
             </button>
           </div>
         </div>
@@ -661,58 +647,58 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
         <div className="flex items-center gap-2.5">
           <button
             onClick={onEmailRoster}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-[#0B1612] hover:bg-[#13221C] border border-[#1D362C] text-[#F1F5F9] rounded-lg text-xs font-semibold transition-colors"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-black/[0.04] hover:bg-black/[0.08] text-[#1D1D1F] rounded-xl text-xs font-semibold transition-colors cursor-pointer"
             type="button"
           >
-            <Mail className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Email Roster to HR</span>
+            <Mail className="w-3.5 h-3.5 text-[#0071E3]" />
+            <span>Email Roster</span>
           </button>
           <button
             onClick={() => onGenerateFormalShortlist(selectedCount)}
-            className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#F97316] hover:bg-[#EA580C] text-white rounded-lg text-xs font-bold shadow-[0_0_16px_rgba(249,115,22,0.35)] active:scale-[0.98] transition-all"
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#0071E3] hover:bg-[#0077ED] text-white rounded-xl text-xs font-semibold shadow-[0_2px_8px_rgba(0,113,227,0.25)] active:scale-[0.98] transition-all cursor-pointer"
             type="button"
           >
             <Zap className="w-3.5 h-3.5 text-white" />
-            <span>Generate Formal Shortlist ({selectedCount})</span>
+            <span>Generate Shortlist ({selectedCount})</span>
           </button>
         </div>
       </div>
 
-      {/* High-Density Data Table Card with Spring Boot Placeholder Container ID */}
+      {/* Candidate Table Card */}
       <div
         id="candidateTableContainer"
-        className="pms-card rounded-2xl overflow-hidden flex flex-col border border-[#1D362C]"
+        className="apple-card overflow-hidden flex flex-col"
       >
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#0B1612] h-10 text-[#94A3B8] text-[11px] uppercase tracking-wider border-b border-[#1D362C]">
+              <tr className="bg-[#FBFBFC] h-10 text-[#86868B] text-[11px] uppercase tracking-wider border-b border-black/[0.06]">
                 <th className="w-10 px-4 text-center">
                   <input
                     checked={isAllSelected}
                     onChange={toggleSelectAll}
-                    className="w-3.5 h-3.5 accent-emerald-500 rounded cursor-pointer"
+                    className="w-3.5 h-3.5 text-[#0071E3] rounded cursor-pointer"
                     type="checkbox"
                   />
                 </th>
-                <th className="px-4 py-1.5 font-bold">Student Name & Institutional Email</th>
+                <th className="px-4 py-1.5 font-bold">Candidate Name</th>
                 <th className="px-4 py-1.5 font-bold">Roll No</th>
-                <th className="px-4 py-1.5 font-bold">Branch & Sec</th>
+                <th className="px-4 py-1.5 font-bold">Branch</th>
                 <th className="px-4 py-1.5 font-bold">CGPA</th>
                 <th className="px-4 py-1.5 font-bold">Backlogs</th>
                 <th className="px-4 py-1.5 font-bold">Drive Stage</th>
-                <th className="px-4 py-1.5 font-bold">Resume Status</th>
+                <th className="px-4 py-1.5 font-bold">Resume Dossier</th>
                 <th className="px-4 py-1.5 font-bold text-right pr-6">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1D362C]/70 text-xs text-[#F1F5F9]">
+            <tbody className="divide-y divide-black/[0.04] text-xs text-[#1D1D1F]">
               {filteredCandidates.map((cand) => (
                 <tr
                   key={cand.id}
                   data-student-id={cand.rollNo}
                   data-stage={cand.driveStage}
-                  className={`h-13 hover:bg-[#182C24]/70 transition-colors group ${
-                    cand.selected ? 'bg-emerald-950/20' : ''
+                  className={`h-13 hover:bg-black/[0.02] transition-colors group ${
+                    cand.selected ? 'bg-[#0071E3]/[0.03]' : ''
                   }`}
                 >
                   {/* Select Checkbox */}
@@ -720,7 +706,7 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
                     <input
                       checked={cand.selected}
                       onChange={() => toggleCandidateSelect(cand.id)}
-                      className="w-3.5 h-3.5 accent-emerald-500 rounded cursor-pointer"
+                      className="w-3.5 h-3.5 text-[#0071E3] rounded cursor-pointer"
                       type="checkbox"
                     />
                   </td>
@@ -728,16 +714,14 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
                   {/* Student Name & Email */}
                   <td className="px-4 py-2">
                     <div className="flex items-center gap-2.5">
-                      <div
-                        className={`w-7 h-7 rounded-lg font-bold text-xs flex items-center justify-center shrink-0 ${cand.avatarColor}`}
-                      >
+                      <div className="w-7 h-7 rounded-lg bg-[#0071E3]/10 text-[#0071E3] font-bold text-xs flex items-center justify-center shrink-0">
                         {cand.initials}
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <span className="font-bold text-[#F1F5F9] truncate group-hover:text-emerald-300 transition-colors">
+                        <span className="font-bold text-[#1D1D1F] truncate group-hover:text-[#0071E3] transition-colors">
                           {cand.name}
                         </span>
-                        <span className="text-[11px] text-[#94A3B8] truncate">
+                        <span className="text-[11px] text-[#6E6E73] truncate">
                           {cand.email}
                         </span>
                       </div>
@@ -745,26 +729,26 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
                   </td>
 
                   {/* Roll No */}
-                  <td className="px-4 py-2 font-mono font-medium text-[#F1F5F9]">
+                  <td className="px-4 py-2 font-mono font-medium text-[#1D1D1F]">
                     {cand.rollNo}
                   </td>
 
                   {/* Branch & Sec */}
                   <td className="px-4 py-2">
-                    <span className="inline-flex px-2 py-0.5 rounded bg-[#0B1612] border border-[#1D362C] font-mono text-xs text-[#F1F5F9] font-bold">
+                    <span className="inline-flex px-2 py-0.5 rounded-md bg-black/[0.04] font-mono text-xs text-[#1D1D1F] font-semibold">
                       {cand.branch} ({cand.section})
                     </span>
                   </td>
 
-                  {/* CGPA with Emerald or Orange Highlight */}
+                  {/* CGPA */}
                   <td className="px-4 py-2">
                     <span
                       className={`inline-flex items-center px-2 py-0.5 rounded-full font-mono text-xs font-bold ${
                         cand.cgpa >= 9.0
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
+                          ? 'bg-[#34C759]/10 text-[#28A745]'
                           : cand.cgpa >= 8.0
-                          ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                          : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                          ? 'bg-[#0071E3]/10 text-[#0071E3]'
+                          : 'bg-[#FF9500]/10 text-[#D97706]'
                       }`}
                     >
                       {cand.cgpa.toFixed(2)}
@@ -773,7 +757,7 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
 
                   {/* Backlogs */}
                   <td className="px-4 py-2">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] bg-[#0B1612] border border-[#1D362C] text-[#94A3B8] font-medium">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] bg-black/[0.04] text-[#6E6E73] font-medium">
                       {cand.backlogs} Active
                     </span>
                   </td>
@@ -781,16 +765,16 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
                   {/* Drive Stage Badge */}
                   <td className="px-4 py-2">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
                         cand.driveStage === 'Offered'
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                          ? 'bg-[#34C759]/10 text-[#28A745]'
                           : cand.driveStage.includes('Tech')
-                          ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
+                          ? 'bg-[#0071E3]/10 text-[#0071E3]'
                           : cand.driveStage === 'HR Interview'
-                          ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
+                          ? 'bg-purple-50 text-purple-600'
                           : cand.driveStage === 'OA Cleared'
-                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                          : 'bg-slate-500/20 text-slate-300 border border-slate-500/40'
+                          ? 'bg-[#FF9500]/10 text-[#D97706]'
+                          : 'bg-black/[0.05] text-[#6E6E73]'
                       }`}
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -802,39 +786,32 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
                   <td className="px-4 py-2">
                     <button
                       onClick={() => onViewResume(cand)}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0B1612] border border-[#1D362C] hover:border-emerald-500/40 text-xs text-[#F1F5F9] hover:text-emerald-300 transition-colors font-semibold"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-black/[0.08] text-xs text-[#1D1D1F] transition-colors font-semibold cursor-pointer"
                       type="button"
                     >
-                      <FileCheck2 className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Verified PDF</span>
+                      <FileCheck2 className="w-3.5 h-3.5 text-[#0071E3]" />
+                      <span>View Dossier</span>
                     </button>
                   </td>
 
-                  {/* Actions: Promote, Reject, More */}
+                  {/* Actions */}
                   <td className="px-4 py-2 text-right pr-6">
                     <div className="flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => promoteCandidate(cand.id, cand.name)}
-                        className="p-1.5 rounded-lg text-emerald-400 hover:bg-emerald-500/20 transition-colors"
-                        title="Promote to Next Stage"
+                        className="p-1.5 rounded-lg text-[#0071E3] hover:bg-[#0071E3]/10 transition-colors cursor-pointer"
+                        title="Promote to Next Round"
                         type="button"
                       >
                         <ArrowRightCircle className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => rejectCandidate(cand.id, cand.name)}
-                        className="p-1.5 rounded-lg text-[#94A3B8] hover:text-rose-400 hover:bg-rose-500/20 transition-colors"
+                        className="p-1.5 rounded-lg text-[#86868B] hover:text-[#FF3B30] hover:bg-rose-50 transition-colors cursor-pointer"
                         title="Archive candidate"
                         type="button"
                       >
                         <XCircle className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => showToast(`Candidate details for ${cand.name} loaded.`)}
-                        className="p-1.5 rounded-lg text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1D362C] transition-colors"
-                        type="button"
-                      >
-                        <MoreVertical className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
@@ -844,65 +821,22 @@ export const RecruitmentCockpit: React.FC<RecruitmentCockpitProps> = ({
           </table>
         </div>
 
-        {/* Table Footer / Pagination & Sync Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-3.5 bg-[#0B1612] border-t border-[#1D362C]">
-          <div className="flex items-center gap-4 text-xs text-[#94A3B8]">
+        {/* Table Footer */}
+        <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-3.5 bg-[#FBFBFC] border-t border-black/[0.06]">
+          <div className="flex items-center gap-4 text-xs text-[#6E6E73]">
             <span>
-              Showing <strong className="text-[#F1F5F9] font-bold">1</strong> to{' '}
-              <strong className="text-[#F1F5F9] font-bold">
-                {Math.min(filteredCandidates.length, 7)}
+              Showing <strong className="text-[#1D1D1F] font-bold">1</strong> to{' '}
+              <strong className="text-[#1D1D1F] font-bold">
+                {Math.min(filteredCandidates.length, 10)}
               </strong>{' '}
-              of <strong className="text-[#F1F5F9] font-bold">{filteredCandidates.length}</strong>{' '}
-              candidate profiles
+              of <strong className="text-[#1D1D1F] font-bold">{filteredCandidates.length}</strong>{' '}
+              candidates
             </span>
-            <div className="flex items-center gap-1.5">
-              <span>Rows per page:</span>
-              <select className="bg-[#13221C] border border-[#1D362C] text-xs rounded px-2 py-0.5 text-[#F1F5F9] outline-none cursor-pointer">
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-              </select>
-            </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <button
-              disabled
-              className="px-3 py-1 rounded bg-[#13221C] border border-[#1D362C] text-[#94A3B8] text-xs disabled:opacity-40 font-medium cursor-not-allowed"
-              type="button"
-            >
-              Previous
-            </button>
-            <button
-              className="px-3 py-1 rounded bg-emerald-600 text-white text-xs font-bold shadow-sm"
-              type="button"
-            >
-              1
-            </button>
-            <button
-              className="px-3 py-1 rounded bg-[#13221C] border border-[#1D362C] text-[#F1F5F9] text-xs hover:bg-[#182C24] font-medium"
-              type="button"
-            >
-              2
-            </button>
-            <button
-              className="px-3 py-1 rounded bg-[#13221C] border border-[#1D362C] text-[#F1F5F9] text-xs hover:bg-[#182C24] font-medium"
-              type="button"
-            >
-              3
-            </button>
-            <span className="px-1 text-[#94A3B8] text-xs">...</span>
-            <button
-              className="px-3 py-1 rounded bg-[#13221C] border border-[#1D362C] text-[#F1F5F9] text-xs hover:bg-[#182C24] font-medium"
-              type="button"
-            >
-              Next
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2 text-[11px] text-[#94A3B8]">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Last synced with University ERP database 3 mins ago • Auto-validation active</span>
+          <div className="flex items-center gap-2 text-[11px] text-[#86868B]">
+            <span className="w-2 h-2 rounded-full bg-[#34C759]"></span>
+            <span>Synchronized with University ERP • Verified Registry</span>
           </div>
         </div>
       </div>

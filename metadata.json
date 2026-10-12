@@ -1,6 +1,6 @@
 {
   "name": "Placement Command - College Placement Management System",
-  "description": "Enterprise College Placement Management System (PMS) featuring deep obsidian emerald theme, candidate shortlisting cockpit, student academic metrics ribbon, and interactive recruitment drives pipeline.",
+  "description": "Institutional College Placement Management System (PMS) featuring Cupertino Apple-grade interface, candidate shortlisting cockpit, student academic metrics ribbon, and interactive recruitment drives pipeline.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

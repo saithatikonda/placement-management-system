@@ -6,19 +6,13 @@ import {
   Award, 
   PlusCircle, 
   Download, 
-  ArrowRight, 
-  XCircle, 
   ArrowRightCircle, 
   FileCheck2, 
   Search, 
-  Filter, 
-  Sparkles, 
-  Briefcase,
-  ChevronDown,
-  Calendar,
-  Send
+  XCircle,
+  Briefcase
 } from 'lucide-react';
-import { CandidateEntry, JobDrive } from '../types/pms';
+import { CandidateEntry } from '../types/pms';
 
 interface RecruiterDashboardViewProps {
   candidates: CandidateEntry[];
@@ -80,7 +74,7 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
         return c;
       })
     );
-    showToast(`✓ Advanced ${name} to next interview round!`);
+    showToast(`✓ Advanced ${name} to next round`);
   };
 
   // Action: Shortlist candidate
@@ -88,7 +82,7 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
     setCandidates((prev) =>
       prev.map((c) => (c.id === id ? { ...c, driveStage: 'OA Cleared' } : c))
     );
-    showToast(`✓ Candidate ${name} added to company shortlist!`);
+    showToast(`✓ Added ${name} to shortlist`);
   };
 
   // Action: Roll Offer
@@ -96,47 +90,47 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
     setCandidates((prev) =>
       prev.map((c) => (c.id === id ? { ...c, driveStage: 'Offered' } : c))
     );
-    showToast(`🎉 Formal Job Offer rolled out to ${name}!`);
+    showToast(`🎉 Offer rolled out to ${name}!`);
   };
 
   // Action: Reject candidate
   const handleReject = (id: string, name: string) => {
     setCandidates((prev) => prev.filter((c) => c.id !== id));
-    showToast(`Candidate ${name} archived from applicant roster.`);
+    showToast(`Candidate ${name} archived from roster`);
   };
 
   // Download all resumes mock
   const handleBulkDownloadResumes = () => {
-    showToast(`Archiving and downloading ${filteredApplicants.length} verified candidate resumes (.ZIP)...`);
+    showToast(`Downloading ${filteredApplicants.length} candidate dossiers (.ZIP)...`);
   };
 
   return (
     <div className="space-y-6 pb-12 relative">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#11231B] border border-emerald-500/50 text-[#F1F5F9] px-4 py-3 rounded-2xl shadow-[0_16px_36px_rgba(0,0,0,0.85)] flex items-center gap-3 animate-bounce">
-          <Sparkles className="w-4 h-4 text-emerald-400" />
+        <div className="fixed bottom-6 right-6 z-50 bg-white/95 backdrop-blur-xl border border-black/[0.08] text-[#1D1D1F] px-4 py-3 rounded-2xl shadow-[0_12px_32px_rgba(0,0,0,0.12)] flex items-center gap-2.5 animate-in fade-in duration-150">
+          <CheckCircle2 className="w-4 h-4 text-[#0071E3]" />
           <span className="text-xs font-semibold">{toastMessage}</span>
         </div>
       )}
 
-      {/* Recruiter Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pms-card rounded-3xl p-6 border border-emerald-500/20">
+      {/* Recruiter Header Bar - Apple Card */}
+      <div className="flex flex-wrap items-center justify-between gap-4 apple-card p-6">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-[#070F0C] border-2 border-[#F97316]/40 flex items-center justify-center font-extrabold text-sm text-[#F97316] shadow-[0_0_20px_rgba(249,115,22,0.25)]">
+          <div className="w-14 h-14 rounded-2xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center font-bold text-base">
             MSFT
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-extrabold text-[#F1F5F9] tracking-tight">
+              <h2 className="text-xl font-bold text-[#1D1D1F] tracking-tight">
                 {companyName} Talent Acquisition Console
               </h2>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-bold">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#0071E3]/10 text-[#0071E3] font-mono text-xs font-semibold">
                 Tier-1 Day 1
               </span>
             </div>
-            <p className="text-xs text-[#94A3B8] mt-0.5">
-              University Campus Recruitment Drive (Class of 2026) • Connected to ATS API
+            <p className="text-xs text-[#6E6E73] mt-0.5">
+              University Campus Recruitment Drive • Class of 2026 • ATS Real-Time Sync
             </p>
           </div>
         </div>
@@ -144,15 +138,15 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
         <div className="flex items-center gap-3">
           <button
             onClick={handleBulkDownloadResumes}
-            className="px-4 py-2 bg-[#070F0C] hover:bg-[#162E23] border border-[#162E23] text-[#F1F5F9] rounded-xl text-xs font-bold flex items-center gap-2 transition-all"
+            className="px-4 py-2 bg-black/[0.04] hover:bg-black/[0.08] border border-black/[0.06] text-[#1D1D1F] rounded-xl text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer"
           >
-            <Download className="w-4 h-4 text-emerald-400" />
-            <span>Download All Resumes (.ZIP)</span>
+            <Download className="w-4 h-4 text-[#0071E3]" />
+            <span>Download All Dossiers (.ZIP)</span>
           </button>
 
           <button
             onClick={onPostNewDrive}
-            className="px-4 py-2 bg-[#F97316] hover:bg-[#EA580C] text-white rounded-xl text-xs font-bold shadow-[0_0_20px_rgba(249,115,22,0.35)] active:scale-[0.98] transition-all flex items-center gap-2"
+            className="px-4 py-2 bg-[#0071E3] hover:bg-[#0077ED] text-white rounded-xl text-xs font-semibold shadow-[0_2px_8px_rgba(0,113,227,0.25)] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer"
           >
             <PlusCircle className="w-4 h-4 text-white" />
             <span>+ Create Job Drive</span>
@@ -163,88 +157,86 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
       {/* 4 RECRUITER METRIC CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1 */}
-        <div className="pms-card rounded-2xl p-5 border border-emerald-500/20 flex flex-col justify-between">
+        <div className="apple-card p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-[11px] uppercase font-bold text-[#94A3B8]">Total Active Drives</span>
-              <div className="text-3xl font-extrabold font-mono text-[#F1F5F9] mt-1">3</div>
+              <span className="text-[11px] uppercase font-semibold text-[#86868B]">Active Drives</span>
+              <div className="text-3xl font-bold font-mono text-[#1D1D1F] mt-1">3</div>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400">
+            <div className="w-9 h-9 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center">
               <Building2 className="w-5 h-5" />
             </div>
           </div>
-          <span className="text-[11px] text-[#94A3B8] mt-3">SDE-1, Cloud Infra, AI Systems</span>
+          <span className="text-[11px] text-[#6E6E73] mt-3 font-medium">SDE-1, Cloud Infra, AI Core</span>
         </div>
 
         {/* Metric 2 */}
-        <div className="pms-card rounded-2xl p-5 border border-emerald-500/20 flex flex-col justify-between">
+        <div className="apple-card p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-[11px] uppercase font-bold text-[#94A3B8]">Applicants Received</span>
-              <div className="text-3xl font-extrabold font-mono text-[#F1F5F9] mt-1">380</div>
+              <span className="text-[11px] uppercase font-semibold text-[#86868B]">Applicants Received</span>
+              <div className="text-3xl font-bold font-mono text-[#1D1D1F] mt-1">380</div>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400">
+            <div className="w-9 h-9 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
           </div>
-          <span className="text-[11px] text-emerald-400 mt-3 font-medium">100% ERP Verified Records</span>
+          <span className="text-[11px] text-[#34C759] mt-3 font-semibold">100% ERP Verified Candidates</span>
         </div>
 
         {/* Metric 3 */}
-        <div className="pms-card rounded-2xl p-5 border border-emerald-500/20 flex flex-col justify-between">
+        <div className="apple-card p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-[11px] uppercase font-bold text-[#94A3B8]">Shortlisted Candidates</span>
-              <div className="text-3xl font-extrabold font-mono text-[#F1F5F9] mt-1">142</div>
+              <span className="text-[11px] uppercase font-semibold text-[#86868B]">Shortlisted</span>
+              <div className="text-3xl font-bold font-mono text-[#1D1D1F] mt-1">142</div>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400">
+            <div className="w-9 h-9 rounded-xl bg-[#34C759]/10 text-[#34C759] flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5" />
             </div>
           </div>
-          <span className="text-[11px] text-[#94A3B8] mt-3">Cleared Online Assessment</span>
+          <span className="text-[11px] text-[#6E6E73] mt-3 font-medium">Cleared Online Assessment</span>
         </div>
 
-        {/* Metric 4 with Warm Orange Accent */}
-        <div className="pms-card rounded-2xl p-5 border border-[#F97316]/30 flex flex-col justify-between shadow-[0_8px_24px_rgba(249,115,22,0.1)]">
+        {/* Metric 4 */}
+        <div className="apple-card p-5 flex flex-col justify-between">
           <div className="flex items-start justify-between">
             <div>
-              <span className="text-[11px] uppercase font-bold text-[#FB923C]">Offers Released</span>
-              <div className="text-3xl font-extrabold font-mono text-[#F97316] mt-1 drop-shadow-[0_0_10px_rgba(249,115,22,0.3)]">
-                18
-              </div>
+              <span className="text-[11px] uppercase font-semibold text-[#86868B]">Offers Rolled</span>
+              <div className="text-3xl font-bold font-mono text-[#0071E3] mt-1">18</div>
             </div>
-            <div className="w-9 h-9 rounded-xl bg-[#F97316]/15 border border-[#F97316]/30 flex items-center justify-center text-[#F97316]">
+            <div className="w-9 h-9 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center">
               <Award className="w-5 h-5" />
             </div>
           </div>
-          <span className="text-[11px] text-[#94A3B8] mt-3">44.0 LPA Compensation Package</span>
+          <span className="text-[11px] text-[#6E6E73] mt-3 font-medium">44.0 LPA Compensation Package</span>
         </div>
       </div>
 
       {/* APPLICANT REVIEW TABLE CARD */}
-      <div className="pms-card rounded-3xl overflow-hidden border border-emerald-500/20">
+      <div className="apple-card overflow-hidden">
         {/* Table Filter Header */}
-        <div className="px-6 py-4 border-b border-[#162E23] flex flex-wrap items-center justify-between gap-4 bg-[#070F0C]">
+        <div className="px-6 py-4 border-b border-black/[0.06] flex flex-wrap items-center justify-between gap-4 bg-[#FBFBFC]">
           <div className="flex items-center gap-3">
-            <h3 className="font-extrabold text-base text-[#F1F5F9]">
-              Applicant Review & Pipeline Advancement
+            <h3 className="font-bold text-base text-[#1D1D1F]">
+              Applicant Review & Round Advancement
             </h3>
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-bold">
+            <span className="px-2.5 py-0.5 rounded-full bg-black/[0.05] text-[#1D1D1F] font-mono text-xs font-semibold">
               {filteredApplicants.length} Candidates
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Stage filter */}
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Stage filter - Apple Segmented Control */}
+            <div className="bg-black/[0.05] p-1 rounded-full flex items-center gap-1">
               {['All', 'Shortlisted', 'Interview', 'Offered'].map((st) => (
                 <button
                   key={st}
                   onClick={() => setSelectedStage(st)}
-                  className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all ${
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                     selectedStage === st
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                      : 'bg-[#11231B] text-[#94A3B8] border border-[#162E23] hover:text-[#F1F5F9]'
+                      ? 'bg-white text-[#1D1D1F] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                      : 'text-[#6E6E73] hover:text-[#1D1D1F]'
                   }`}
                 >
                   {st}
@@ -259,9 +251,9 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search candidate name or roll..."
-                className="pl-8 pr-3 py-1.5 bg-[#11231B] border border-[#162E23] focus:border-emerald-500/50 rounded-xl text-xs text-[#F1F5F9] placeholder:text-[#94A3B8] w-56 outline-none"
+                className="pl-8 pr-3 py-1.5 bg-white border border-black/[0.08] focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] placeholder:text-[#A1A1A6] w-56 outline-none transition-all"
               />
-              <Search className="w-3.5 h-3.5 text-[#94A3B8] absolute left-2.5 top-2.5" />
+              <Search className="w-3.5 h-3.5 text-[#86868B] absolute left-2.5 top-2.5" />
             </div>
           </div>
         </div>
@@ -270,58 +262,58 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
         <div className="overflow-x-auto w-full">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-[#070F0C] text-[#94A3B8] uppercase text-[10px] tracking-wider border-b border-[#162E23] h-10">
+              <tr className="bg-[#FBFBFC] text-[#86868B] uppercase text-[10px] tracking-wider border-b border-black/[0.06] h-10">
                 <th className="px-6 py-2.5 font-bold">Candidate Name</th>
                 <th className="px-6 py-2.5 font-bold">Roll No</th>
                 <th className="px-6 py-2.5 font-bold">Branch</th>
                 <th className="px-6 py-2.5 font-bold">CGPA</th>
-                <th className="px-6 py-2.5 font-bold">Application Stage</th>
-                <th className="px-6 py-2.5 font-bold">Resume Dossier</th>
+                <th className="px-6 py-2.5 font-bold">Current Stage</th>
+                <th className="px-6 py-2.5 font-bold">Dossier</th>
                 <th className="px-6 py-2.5 font-bold text-right pr-6">Recruiter Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#162E23] text-[#F1F5F9]">
+            <tbody className="divide-y divide-black/[0.04] text-[#1D1D1F]">
               {filteredApplicants.map((cand) => (
-                <tr key={cand.id} className="hover:bg-[#162E23]/60 transition-colors h-14">
+                <tr key={cand.id} className="hover:bg-black/[0.02] transition-colors h-14">
                   {/* Name */}
                   <td className="px-6 py-3 font-semibold">
                     <div className="flex items-center gap-2.5">
-                      <div className={`w-8 h-8 rounded-xl font-bold text-xs flex items-center justify-center shrink-0 ${cand.avatarColor}`}>
+                      <div className="w-8 h-8 rounded-xl bg-[#0071E3]/10 text-[#0071E3] font-bold text-xs flex items-center justify-center shrink-0">
                         {cand.initials}
                       </div>
                       <div>
-                        <div className="font-bold text-[#F1F5F9]">{cand.name}</div>
-                        <div className="text-[11px] text-[#94A3B8]">{cand.email}</div>
+                        <div className="font-bold text-[#1D1D1F]">{cand.name}</div>
+                        <div className="text-[11px] text-[#6E6E73]">{cand.email}</div>
                       </div>
                     </div>
                   </td>
 
                   {/* Roll No */}
-                  <td className="px-6 py-3 font-mono font-medium text-emerald-400">
+                  <td className="px-6 py-3 font-mono font-medium text-[#1D1D1F]">
                     {cand.rollNo}
                   </td>
 
                   {/* Branch */}
                   <td className="px-6 py-3">
-                    <span className="px-2 py-0.5 rounded bg-[#070F0C] border border-[#162E23] font-mono text-[11px] font-bold">
+                    <span className="px-2 py-0.5 rounded-md bg-black/[0.04] text-[#1D1D1F] font-mono text-[11px] font-semibold">
                       {cand.branch}
                     </span>
                   </td>
 
                   {/* CGPA */}
-                  <td className="px-6 py-3 font-mono font-extrabold text-emerald-300">
+                  <td className="px-6 py-3 font-mono font-bold text-[#1D1D1F]">
                     {cand.cgpa.toFixed(2)}
                   </td>
 
                   {/* Stage */}
                   <td className="px-6 py-3">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
                         cand.driveStage === 'Offered'
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                          ? 'bg-[#34C759]/10 text-[#28A745]'
                           : cand.driveStage.includes('Tech')
-                          ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
-                          : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                          ? 'bg-[#0071E3]/10 text-[#0071E3]'
+                          : 'bg-[#FF9500]/10 text-[#D97706]'
                       }`}
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
@@ -333,10 +325,10 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
                   <td className="px-6 py-3">
                     <button
                       onClick={() => onViewResume(cand)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#070F0C] border border-[#162E23] hover:border-emerald-500/40 text-emerald-400 hover:text-emerald-300 transition-colors text-xs font-semibold"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-black/[0.08] text-[#1D1D1F] transition-colors text-xs font-semibold cursor-pointer"
                     >
-                      <FileCheck2 className="w-3.5 h-3.5" />
-                      <span>Verified PDF</span>
+                      <FileCheck2 className="w-3.5 h-3.5 text-[#0071E3]" />
+                      <span>View Dossier</span>
                     </button>
                   </td>
 
@@ -344,35 +336,45 @@ export const RecruiterDashboardView: React.FC<RecruiterDashboardViewProps> = ({
                   <td className="px-6 py-3 text-right pr-6">
                     <div className="flex items-center justify-end gap-1.5">
                       {/* Shortlist */}
-                      <button
-                        onClick={() => handleShortlist(cand.id, cand.name)}
-                        className="px-2.5 py-1 rounded-lg bg-[#070F0C] hover:bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-[11px] font-bold transition-colors"
-                      >
-                        Shortlist
-                      </button>
+                      {cand.driveStage !== 'OA Cleared' && (
+                        <button
+                          onClick={() => handleShortlist(cand.id, cand.name)}
+                          className="px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-black/[0.08] text-[#1D1D1F] text-[11px] font-semibold transition-colors cursor-pointer"
+                        >
+                          Shortlist
+                        </button>
+                      )}
 
                       {/* Move to Interview */}
-                      <button
-                        onClick={() => handleAdvanceStage(cand.id, cand.name)}
-                        className="px-2.5 py-1 rounded-lg bg-[#070F0C] hover:bg-blue-950/40 border border-blue-500/30 text-blue-300 text-[11px] font-bold transition-colors flex items-center gap-1"
-                      >
-                        <span>Move Round</span>
-                        <ArrowRightCircle className="w-3.5 h-3.5 text-blue-400" />
-                      </button>
+                      {cand.driveStage !== 'Offered' && (
+                        <button
+                          onClick={() => handleAdvanceStage(cand.id, cand.name)}
+                          className="px-2.5 py-1 rounded-lg bg-[#0071E3]/10 hover:bg-[#0071E3]/20 text-[#0071E3] text-[11px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>Advance</span>
+                          <ArrowRightCircle className="w-3.5 h-3.5" />
+                        </button>
+                      )}
 
                       {/* Roll Offer */}
-                      <button
-                        onClick={() => handleRollOffer(cand.id, cand.name)}
-                        className="px-2.5 py-1 rounded-lg bg-[#F97316] hover:bg-[#EA580C] text-white text-[11px] font-extrabold transition-all shadow-[0_0_12px_rgba(249,115,22,0.35)] flex items-center gap-1"
-                      >
-                        <span>Roll Offer</span>
-                      </button>
+                      {cand.driveStage !== 'Offered' ? (
+                        <button
+                          onClick={() => handleRollOffer(cand.id, cand.name)}
+                          className="px-2.5 py-1 rounded-lg bg-[#34C759] hover:bg-[#28A745] text-white text-[11px] font-semibold transition-all shadow-[0_2px_6px_rgba(52,199,89,0.3)] flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>Roll Offer</span>
+                        </button>
+                      ) : (
+                        <span className="text-[11px] font-bold text-[#34C759] px-2 py-0.5">
+                          ✓ Offered
+                        </span>
+                      )}
 
                       {/* Reject */}
                       <button
                         onClick={() => handleReject(cand.id, cand.name)}
-                        className="p-1 rounded-lg text-[#94A3B8] hover:text-rose-400 hover:bg-rose-950/30 transition-colors"
-                        title="Reject candidate"
+                        className="p-1 rounded-lg text-[#86868B] hover:text-[#FF3B30] hover:bg-rose-50 transition-colors cursor-pointer"
+                        title="Archive candidate"
                       >
                         <XCircle className="w-4 h-4" />
                       </button>

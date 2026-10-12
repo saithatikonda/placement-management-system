@@ -7,66 +7,50 @@ import {
   Mail, 
   User, 
   Key, 
-  Sparkles, 
   ArrowRight, 
-  CheckCircle2, 
-  Zap,
-  Briefcase
+  Sun, 
+  Moon 
 } from 'lucide-react';
 
 export type UserRole = 'student' | 'recruiter' | 'tpo';
 
 interface AuthLoginViewProps {
   onLogin: (role: UserRole, credentials: any) => void;
+  isDarkMode?: boolean;
+  onToggleTheme?: () => void;
 }
 
-export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
+export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ 
+  onLogin, 
+  isDarkMode = false, 
+  onToggleTheme 
+}) => {
   const [activeRole, setActiveRole] = useState<UserRole>('student');
   const [loading, setLoading] = useState(false);
 
   // Form Fields
-  const [studentIdentifier, setStudentIdentifier] = useState('22CS104');
-  const [studentPassword, setStudentPassword] = useState('••••••••••••');
+  const [studentIdentifier, setStudentIdentifier] = useState('');
+  const [studentPassword, setStudentPassword] = useState('');
 
-  const [recruiterEmail, setRecruiterEmail] = useState('recruiter.campus@microsoft.com');
-  const [companyId, setCompanyId] = useState('MSFT-CAMPUS-2026');
-  const [recruiterPassword, setRecruiterPassword] = useState('••••••••••••');
+  const [recruiterEmail, setRecruiterEmail] = useState('');
+  const [companyId, setCompanyId] = useState('');
+  const [recruiterPassword, setRecruiterPassword] = useState('');
 
-  const [tpoKey, setTpoKey] = useState('TPO-MASTER-KEY-8840');
-  const [tpoOfficerId, setTpoOfficerId] = useState('TPO-DIR-001');
+  const [tpoKey, setTpoKey] = useState('');
+  const [tpoOfficerId, setTpoOfficerId] = useState('');
 
   // Handle Form Submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    /* 
-     * Spring Boot REST API Integration Placeholder:
-     * 
-     * fetch('http://localhost:8080/api/v1/auth/login', {
-     *   method: 'POST',
-     *   headers: { 'Content-Type': 'application/json' },
-     *   body: JSON.stringify({
-     *     role: activeRole,
-     *     credentials: activeRole === 'student' 
-     *       ? { rollNo: studentIdentifier, password: studentPassword }
-     *       : activeRole === 'recruiter'
-     *       ? { email: recruiterEmail, companyId, password: recruiterPassword }
-     *       : { adminKey: tpoKey, officerId: tpoOfficerId }
-     *   })
-     * })
-     * .then(res => res.json())
-     * .then(data => onLogin(activeRole, data))
-     * .catch(err => console.error(err));
-     */
-
     setTimeout(() => {
       setLoading(false);
       onLogin(activeRole, {
         role: activeRole,
-        identifier: activeRole === 'student' ? studentIdentifier : activeRole === 'recruiter' ? recruiterEmail : tpoOfficerId,
+        identifier: activeRole === 'student' ? (studentIdentifier || 'STU-2026') : activeRole === 'recruiter' ? (recruiterEmail || 'recruiter@company.com') : (tpoOfficerId || 'TPO-DIR-001'),
       });
-    }, 600);
+    }, 450);
   };
 
   // 1-Click Demo Logins
@@ -75,48 +59,61 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      const demoIdentifier = role === 'student' ? '22CS104' : role === 'recruiter' ? 'recruiter.campus@microsoft.com' : 'TPO-DIR-001';
       onLogin(role, {
         role,
+        identifier: demoIdentifier,
         isDemo: true,
       });
-    }, 400);
+    }, 350);
   };
 
   return (
-    <div className="min-h-screen bg-[#070F0C] text-[#F1F5F9] flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden selection:bg-emerald-500/30 selection:text-emerald-200">
-      {/* Background ambient radial flares: warm orange backlight and deep forest glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-b from-[#F97316]/10 via-[#10B981]/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-20 -left-20 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen bg-[#F5F5F7] dark:bg-[#141E30] text-[#1D1D1F] dark:text-[#F0F4FF] flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden transition-colors duration-200">
+      {/* Top Bar with Optional Theme Toggle */}
+      {onToggleTheme && (
+        <div className="absolute top-6 right-6 z-20">
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 text-[#1D1D1F] dark:text-[#F8FAFC] border border-black/[0.08] dark:border-white/[0.08] shadow-xs cursor-pointer transition-all"
+            title="Toggle Apple Light / Dark Mode"
+          >
+            {isDarkMode ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-slate-700" />}
+            <span className="font-medium">{isDarkMode ? 'Dark Mode' : 'Apple Light'}</span>
+          </button>
+        </div>
+      )}
 
-      {/* Main Glassy Container */}
+      {/* Subtle Apple-style diffuse backdrop lights */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-b from-[#0071E3]/8 dark:from-[#0071E3]/15 via-transparent to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+      {/* Main Container */}
       <div className="w-full max-w-md relative z-10">
-        {/* Brand Lockup Header */}
+        {/* Brand Lockup */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#11231B] border border-emerald-500/30 shadow-[0_0_24px_rgba(16,185,129,0.25)] text-emerald-400 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#0071E3] text-white shadow-[0_8px_20px_rgba(0,113,227,0.25)] mb-3 transition-transform hover:scale-105 duration-200">
             <GraduationCap className="w-7 h-7" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F1F5F9] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1D1D1F] dark:text-white tracking-tight">
             Placement Command
           </h1>
-          <p className="text-xs text-[#94A3B8] mt-1 font-medium">
-            Campus Placement Management System • Multi-Role Access Gateway
+          <p className="text-xs text-[#6E6E73] dark:text-[#CBD5E1] mt-1 font-medium">
+            College Placement Management System • Sign In (Step 1)
           </p>
         </div>
 
-        {/* Central Glassy Card */}
-        <div className="pms-card rounded-3xl p-6 sm:p-8 backdrop-blur-2xl border border-emerald-500/20 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.85)] relative overflow-hidden">
-          {/* Subtle Orange Glow Rim */}
-          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 bg-[#F97316]/15 rounded-full blur-2xl pointer-events-none"></div>
-
-          {/* Role Switcher Tabs */}
-          <div className="p-1 bg-[#070F0C] border border-[#162E23] rounded-2xl flex items-center mb-6">
+        {/* Central Apple Card */}
+        <div className="apple-card p-7 sm:p-8 relative overflow-hidden bg-white dark:bg-[#1C2D4A] border border-black/[0.06] dark:border-white/[0.12] shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-2xl">
+          {/* Apple Segmented Control */}
+          <div className="bg-black/[0.05] dark:bg-white/[0.06] border border-black/[0.05] dark:border-white/[0.08] p-1 rounded-full flex items-center mb-6">
             <button
               type="button"
               onClick={() => setActiveRole('student')}
-              className={`flex-1 py-2 px-1 text-center text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-1.5 px-3 text-center text-xs font-semibold rounded-full transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeRole === 'student'
-                  ? 'bg-emerald-600 text-white shadow-[0_2px_12px_rgba(16,185,129,0.35)]'
-                  : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+                  ? 'bg-white dark:bg-[#0071E3] text-[#1D1D1F] dark:text-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                  : 'text-[#6E6E73] dark:text-[#CBD5E1] hover:text-[#1D1D1F] dark:hover:text-white'
               }`}
             >
               <User className="w-3.5 h-3.5" />
@@ -126,10 +123,10 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
             <button
               type="button"
               onClick={() => setActiveRole('recruiter')}
-              className={`flex-1 py-2 px-1 text-center text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-1.5 px-3 text-center text-xs font-semibold rounded-full transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeRole === 'recruiter'
-                  ? 'bg-[#F97316] text-white shadow-[0_2px_12px_rgba(249,115,22,0.35)]'
-                  : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+                  ? 'bg-white dark:bg-[#0071E3] text-[#1D1D1F] dark:text-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                  : 'text-[#6E6E73] dark:text-[#CBD5E1] hover:text-[#1D1D1F] dark:hover:text-white'
               }`}
             >
               <Building2 className="w-3.5 h-3.5" />
@@ -139,10 +136,10 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
             <button
               type="button"
               onClick={() => setActiveRole('tpo')}
-              className={`flex-1 py-2 px-1 text-center text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-1.5 px-3 text-center text-xs font-semibold rounded-full transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeRole === 'tpo'
-                  ? 'bg-emerald-600 text-white shadow-[0_2px_12px_rgba(16,185,129,0.35)]'
-                  : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+                  ? 'bg-white dark:bg-[#0071E3] text-[#1D1D1F] dark:text-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                  : 'text-[#6E6E73] dark:text-[#CBD5E1] hover:text-[#1D1D1F] dark:hover:text-white'
               }`}
             >
               <ShieldCheck className="w-3.5 h-3.5" />
@@ -156,7 +153,7 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
             {activeRole === 'student' && (
               <>
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1.5">
+                  <label className="block text-xs font-semibold text-[#1D1D1F] dark:text-white mb-1.5">
                     Roll Number or University Email
                   </label>
                   <div className="relative">
@@ -166,14 +163,14 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
                       value={studentIdentifier}
                       onChange={(e) => setStudentIdentifier(e.target.value)}
                       placeholder="e.g. 22CS104 or student@univ.edu.in"
-                      className="w-full pl-9 pr-3 py-2.5 bg-[#070F0C] border border-[#162E23] focus:border-emerald-500/60 rounded-xl text-xs text-[#F1F5F9] outline-none transition-all placeholder:text-[#94A3B8]/60"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-[#FBFBFC] dark:bg-[#243554] border border-black/[0.1] dark:border-white/[0.15] focus:bg-white dark:focus:bg-[#1A2D4A] focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] dark:text-white outline-none transition-all placeholder:text-[#A1A1A6] dark:placeholder:text-[#8BA3C7]"
                     />
-                    <User className="w-4 h-4 text-emerald-400 absolute left-3 top-2.5" />
+                    <User className="w-4 h-4 text-[#86868B] absolute left-3 top-2.5" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1.5">
+                  <label className="block text-xs font-semibold text-[#1D1D1F] dark:text-white mb-1.5">
                     Account Password
                   </label>
                   <div className="relative">
@@ -183,9 +180,9 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
                       value={studentPassword}
                       onChange={(e) => setStudentPassword(e.target.value)}
                       placeholder="••••••••••••"
-                      className="w-full pl-9 pr-3 py-2.5 bg-[#070F0C] border border-[#162E23] focus:border-emerald-500/60 rounded-xl text-xs text-[#F1F5F9] outline-none transition-all placeholder:text-[#94A3B8]/60 font-mono"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-[#FBFBFC] dark:bg-[#243554] border border-black/[0.1] dark:border-white/[0.1] focus:bg-white dark:focus:bg-[#1A2D4A] focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] dark:text-white outline-none transition-all placeholder:text-[#A1A1A6] dark:placeholder:text-[#8BA3C7] font-mono"
                     />
-                    <Lock className="w-4 h-4 text-emerald-400 absolute left-3 top-2.5" />
+                    <Lock className="w-4 h-4 text-[#86868B] absolute left-3 top-2.5" />
                   </div>
                 </div>
               </>
@@ -195,7 +192,7 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
             {activeRole === 'recruiter' && (
               <>
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1.5">
+                  <label className="block text-xs font-semibold text-[#1D1D1F] dark:text-white mb-1.5">
                     Corporate Email Address
                   </label>
                   <div className="relative">
@@ -205,14 +202,14 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
                       value={recruiterEmail}
                       onChange={(e) => setRecruiterEmail(e.target.value)}
                       placeholder="e.g. recruiter@microsoft.com"
-                      className="w-full pl-9 pr-3 py-2.5 bg-[#070F0C] border border-[#162E23] focus:border-[#F97316]/60 rounded-xl text-xs text-[#F1F5F9] outline-none transition-all placeholder:text-[#94A3B8]/60"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-[#FBFBFC] dark:bg-[#243554] border border-black/[0.1] dark:border-white/[0.15] focus:bg-white dark:focus:bg-[#1A2D4A] focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] dark:text-white outline-none transition-all placeholder:text-[#A1A1A6] dark:placeholder:text-[#8BA3C7]"
                     />
-                    <Mail className="w-4 h-4 text-[#F97316] absolute left-3 top-2.5" />
+                    <Mail className="w-4 h-4 text-[#86868B] absolute left-3 top-2.5" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1.5">
+                  <label className="block text-xs font-semibold text-[#1D1D1F] dark:text-white mb-1.5">
                     Registered Company ID
                   </label>
                   <div className="relative">
@@ -222,14 +219,14 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
                       value={companyId}
                       onChange={(e) => setCompanyId(e.target.value)}
                       placeholder="e.g. MSFT-CAMPUS-2026"
-                      className="w-full pl-9 pr-3 py-2.5 bg-[#070F0C] border border-[#162E23] focus:border-[#F97316]/60 rounded-xl text-xs text-[#F1F5F9] outline-none transition-all placeholder:text-[#94A3B8]/60 font-mono"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-[#FBFBFC] dark:bg-[#243554] border border-black/[0.1] dark:border-white/[0.1] focus:bg-white dark:focus:bg-[#1A2D4A] focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] dark:text-white outline-none transition-all placeholder:text-[#A1A1A6] dark:placeholder:text-[#8BA3C7] font-mono"
                     />
-                    <Building2 className="w-4 h-4 text-[#F97316] absolute left-3 top-2.5" />
+                    <Building2 className="w-4 h-4 text-[#86868B] absolute left-3 top-2.5" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1.5">
+                  <label className="block text-xs font-semibold text-[#1D1D1F] dark:text-white mb-1.5">
                     Portal Access Key
                   </label>
                   <div className="relative">
@@ -239,9 +236,9 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
                       value={recruiterPassword}
                       onChange={(e) => setRecruiterPassword(e.target.value)}
                       placeholder="••••••••••••"
-                      className="w-full pl-9 pr-3 py-2.5 bg-[#070F0C] border border-[#162E23] focus:border-[#F97316]/60 rounded-xl text-xs text-[#F1F5F9] outline-none transition-all placeholder:text-[#94A3B8]/60 font-mono"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-[#FBFBFC] dark:bg-[#243554] border border-black/[0.1] dark:border-white/[0.1] focus:bg-white dark:focus:bg-[#1A2D4A] focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] dark:text-white outline-none transition-all placeholder:text-[#A1A1A6] dark:placeholder:text-[#8BA3C7] font-mono"
                     />
-                    <Lock className="w-4 h-4 text-[#F97316] absolute left-3 top-2.5" />
+                    <Lock className="w-4 h-4 text-[#86868B] absolute left-3 top-2.5" />
                   </div>
                 </div>
               </>
@@ -251,7 +248,7 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
             {activeRole === 'tpo' && (
               <>
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1.5">
+                  <label className="block text-xs font-semibold text-[#1D1D1F] dark:text-white mb-1.5">
                     Officer / Director ID
                   </label>
                   <div className="relative">
@@ -261,15 +258,15 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
                       value={tpoOfficerId}
                       onChange={(e) => setTpoOfficerId(e.target.value)}
                       placeholder="e.g. TPO-DIR-001"
-                      className="w-full pl-9 pr-3 py-2.5 bg-[#070F0C] border border-[#162E23] focus:border-emerald-500/60 rounded-xl text-xs text-[#F1F5F9] outline-none transition-all placeholder:text-[#94A3B8]/60 font-mono"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-[#FBFBFC] dark:bg-[#243554] border border-black/[0.1] dark:border-white/[0.1] focus:bg-white dark:focus:bg-[#1A2D4A] focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] dark:text-white outline-none transition-all placeholder:text-[#A1A1A6] dark:placeholder:text-[#8BA3C7] font-mono"
                     />
-                    <ShieldCheck className="w-4 h-4 text-emerald-400 absolute left-3 top-2.5" />
+                    <ShieldCheck className="w-4 h-4 text-[#86868B] absolute left-3 top-2.5" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] uppercase tracking-wider text-[#94A3B8] font-bold mb-1.5">
-                    Administrative Cryptographic Master Key
+                  <label className="block text-xs font-semibold text-[#1D1D1F] dark:text-white mb-1.5">
+                    Administrative Master Key
                   </label>
                   <div className="relative">
                     <input
@@ -278,32 +275,28 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
                       value={tpoKey}
                       onChange={(e) => setTpoKey(e.target.value)}
                       placeholder="TPO-MASTER-KEY-••••"
-                      className="w-full pl-9 pr-3 py-2.5 bg-[#070F0C] border border-[#162E23] focus:border-emerald-500/60 rounded-xl text-xs text-[#F1F5F9] outline-none transition-all placeholder:text-[#94A3B8]/60 font-mono"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-[#FBFBFC] dark:bg-[#243554] border border-black/[0.1] dark:border-white/[0.1] focus:bg-white dark:focus:bg-[#1A2D4A] focus:border-[#0071E3] focus:ring-4 focus:ring-[#0071E3]/15 rounded-xl text-xs text-[#1D1D1F] dark:text-white outline-none transition-all placeholder:text-[#A1A1A6] dark:placeholder:text-[#8BA3C7] font-mono"
                     />
-                    <Key className="w-4 h-4 text-emerald-400 absolute left-3 top-2.5" />
+                    <Key className="w-4 h-4 text-[#86868B] absolute left-3 top-2.5" />
                   </div>
                 </div>
               </>
             )}
 
-            {/* Submit Button with Warm Glow */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 active:scale-[0.98] ${
-                activeRole === 'recruiter'
-                  ? 'bg-[#F97316] hover:bg-[#EA580C] text-white shadow-[0_0_20px_rgba(249,115,22,0.4)]'
-                  : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.35)]'
-              }`}
+              className="w-full py-2.5 px-4 bg-[#0071E3] hover:bg-[#0077ED] text-white rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 active:scale-[0.98] shadow-[0_2px_8px_rgba(0,113,227,0.25)] cursor-pointer mt-2"
             >
               {loading ? (
-                <span>Authenticating Credentials...</span>
+                <span>Authenticating...</span>
               ) : (
                 <>
                   <span>
-                    {activeRole === 'student' && 'Enter Student Portal'}
+                    {activeRole === 'student' && 'Sign In to Student Portal'}
                     {activeRole === 'recruiter' && 'Access Recruiter Console'}
-                    {activeRole === 'tpo' && 'Unlock TPO Administration'}
+                    {activeRole === 'tpo' && 'Unlock TPO Cockpit'}
                   </span>
                   <ArrowRight className="w-4 h-4" />
                 </>
@@ -311,54 +304,60 @@ export const AuthLoginView: React.FC<AuthLoginViewProps> = ({ onLogin }) => {
             </button>
           </form>
 
-          {/* Quick 1-Click Demo Section */}
-          <div className="mt-6 pt-5 border-t border-[#162E23]">
-            <span className="block text-[10px] uppercase tracking-wider text-[#94A3B8] font-bold text-center mb-2.5">
-              Instant 1-Click Demo Evaluation Profiles
+          {/* Quick 1-Click Demo Evaluation Profiles */}
+          <div className="mt-6 pt-5 border-t border-black/[0.06] dark:border-white/[0.08]">
+            <span className="block text-[11px] font-semibold text-[#86868B] dark:text-[#CBD5E1] text-center mb-2.5">
+              Instant 1-Click Demo Profiles
             </span>
             <div className="flex flex-col gap-2">
               <button
                 type="button"
                 onClick={() => handleQuickDemo('student')}
-                className="w-full py-2 px-3 bg-[#070F0C] hover:bg-[#162E23] border border-emerald-500/30 rounded-xl text-xs font-semibold text-emerald-300 flex items-center justify-between transition-all group"
+                className="w-full py-2 px-3 bg-black/[0.03] dark:bg-white/[0.03] hover:bg-[#0071E3]/10 border border-black/[0.06] dark:border-white/[0.06] hover:border-[#0071E3]/30 rounded-xl text-xs font-medium text-[#1D1D1F] dark:text-white hover:text-[#0071E3] dark:hover:text-[#38BDF8] flex items-center justify-between transition-all group cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <Zap className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Student: Aarav Patel (CSE, 8.42 CGPA)</span>
+                  <span className="w-6 h-6 rounded-lg bg-[#34C759]/15 text-[#28A745] flex items-center justify-center font-bold text-[10px]">
+                    ST
+                  </span>
+                  <span className="font-semibold">Student Portal Access</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ArrowRight className="w-3.5 h-3.5 text-[#86868B] group-hover:text-[#0071E3] transition-colors" />
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemo('recruiter')}
-                className="w-full py-2 px-3 bg-[#070F0C] hover:bg-[#162E23] border border-[#F97316]/30 rounded-xl text-xs font-semibold text-[#FB923C] flex items-center justify-between transition-all group"
+                className="w-full py-2 px-3 bg-black/[0.03] dark:bg-white/[0.03] hover:bg-[#0071E3]/10 border border-black/[0.06] dark:border-white/[0.06] hover:border-[#0071E3]/30 rounded-xl text-xs font-medium text-[#1D1D1F] dark:text-white hover:text-[#0071E3] dark:hover:text-[#38BDF8] flex items-center justify-between transition-all group cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <Briefcase className="w-3.5 h-3.5 text-[#F97316]" />
-                  <span>Recruiter: Microsoft IDC Campus Team</span>
+                  <span className="w-6 h-6 rounded-lg bg-[#FF9500]/15 text-[#D97706] flex items-center justify-center font-bold text-[10px]">
+                    RC
+                  </span>
+                  <span className="font-semibold">Corporate Recruiter Console</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ArrowRight className="w-3.5 h-3.5 text-[#86868B] group-hover:text-[#0071E3] transition-colors" />
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemo('tpo')}
-                className="w-full py-2 px-3 bg-[#070F0C] hover:bg-[#162E23] border border-emerald-500/30 rounded-xl text-xs font-semibold text-emerald-300 flex items-center justify-between transition-all group"
+                className="w-full py-2 px-3 bg-black/[0.03] dark:bg-white/[0.03] hover:bg-[#0071E3]/10 border border-black/[0.06] dark:border-white/[0.06] hover:border-[#0071E3]/30 rounded-xl text-xs font-medium text-[#1D1D1F] dark:text-white hover:text-[#0071E3] dark:hover:text-[#38BDF8] flex items-center justify-between transition-all group cursor-pointer"
               >
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>TPO Admin: Dr. Arjun Sharma (Director)</span>
+                  <span className="w-6 h-6 rounded-lg bg-[#0071E3]/15 text-[#0071E3] flex items-center justify-center font-bold text-[10px]">
+                    TP
+                  </span>
+                  <span className="font-semibold">TPO Admin Directorate</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ArrowRight className="w-3.5 h-3.5 text-[#86868B] group-hover:text-[#0071E3] transition-colors" />
               </button>
             </div>
           </div>
         </div>
 
         {/* Footer Note */}
-        <div className="text-center mt-6 text-[11px] text-[#94A3B8]">
-          <span>Protected by Institutional Spring Boot Security Gateway • SSL 256-bit</span>
+        <div className="text-center mt-6 text-xs text-[#86868B]">
+          <span>Institutional Placement Operations • Official University Gateway</span>
         </div>
       </div>
     </div>

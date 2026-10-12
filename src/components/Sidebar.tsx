@@ -34,18 +34,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-full w-64 bg-[#0B1612] border-r border-[#1D362C] z-50 flex flex-col justify-between shadow-[0_12px_32px_-4px_rgba(0,0,0,0.8)] select-none">
+    <aside className="fixed left-0 top-0 h-full w-64 bg-white/90 backdrop-blur-xl border-r border-black/[0.06] z-50 flex flex-col justify-between shadow-[0_4px_24px_rgba(0,0,0,0.04)] select-none">
       <div className="flex flex-col">
         {/* Brand & Portal Identification */}
-        <div className="h-16 px-4 flex items-center gap-3 border-b border-[#1D362C]">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold shrink-0 shadow-[0_0_12px_rgba(16,185,129,0.2)]">
-            <GraduationCap className="w-5 h-5 text-emerald-400" />
+        <div className="h-16 px-4 flex items-center gap-3 border-b border-black/[0.06]">
+          <div className="w-9 h-9 rounded-xl bg-[#0071E3] flex items-center justify-center text-white font-bold shrink-0 shadow-[0_2px_8px_rgba(0,113,227,0.25)]">
+            <GraduationCap className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="font-semibold text-sm text-[#F1F5F9] tracking-tight truncate leading-tight">
+            <span className="font-bold text-sm text-[#1D1D1F] tracking-tight truncate leading-tight">
               Placement Command
             </span>
-            <span className="text-[11px] font-medium text-emerald-400/80 tracking-wider truncate uppercase">
+            <span className="text-[10px] font-semibold text-[#86868B] tracking-wider truncate uppercase">
               Univ. TPO Portal
             </span>
           </div>
@@ -53,13 +53,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Perspective Switcher (TPO vs Student) */}
         <div className="px-3 pt-3">
-          <div className="p-1 bg-[#13221C] border border-[#1D362C] rounded-lg flex items-center gap-1">
+          <div className="p-1 bg-black/[0.05] rounded-full flex items-center gap-1">
             <button
               onClick={() => setActiveRole('tpo')}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded text-xs font-semibold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 activeRole === 'tpo'
-                  ? 'bg-emerald-600 text-white shadow-[0_2px_8px_rgba(16,185,129,0.35)]'
-                  : 'text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#182C24]'
+                  ? 'bg-white text-[#1D1D1F] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                  : 'text-[#6E6E73] hover:text-[#1D1D1F]'
               }`}
             >
               <Briefcase className="w-3.5 h-3.5" />
@@ -67,10 +67,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </button>
             <button
               onClick={() => setActiveRole('student')}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded text-xs font-semibold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 activeRole === 'student'
-                  ? 'bg-[#F97316] text-white shadow-[0_2px_8px_rgba(249,115,22,0.35)]'
-                  : 'text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#182C24]'
+                  ? 'bg-white text-[#1D1D1F] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                  : 'text-[#6E6E73] hover:text-[#1D1D1F]'
               }`}
             >
               <UserCheck className="w-3.5 h-3.5" />
@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Section Heading */}
         <div className="px-4 py-3">
-          <div className="text-[11px] uppercase tracking-wider text-[#94A3B8]/70 font-semibold">
+          <div className="text-[11px] uppercase tracking-wider text-[#86868B] font-semibold">
             Operations Engine
           </div>
         </div>
@@ -95,25 +95,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => setCurrentTab(item.id)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-all group ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all group cursor-pointer ${
                   isActive
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_14px_rgba(16,185,129,0.15)] font-semibold'
-                    : 'text-[#94A3B8] hover:bg-[#13221C] hover:text-[#F1F5F9]'
+                    ? 'bg-[#0071E3]/10 text-[#0071E3] font-semibold'
+                    : 'text-[#6E6E73] hover:bg-black/[0.04] hover:text-[#1D1D1F]'
                 }`}
               >
                 <Icon
                   className={`w-4 h-4 transition-colors ${
-                    isActive ? 'text-emerald-400' : 'text-[#94A3B8] group-hover:text-[#F1F5F9]'
+                    isActive ? 'text-[#0071E3]' : 'text-[#86868B] group-hover:text-[#1D1D1F]'
                   }`}
                 />
                 <span className="truncate">{item.label}</span>
                 {item.id === 'drives' && (
-                  <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">
+                  <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-[#0071E3]/10 text-[#0071E3] font-mono font-semibold">
                     8 Live
                   </span>
                 )}
                 {item.id === 'shortlist' && (
-                  <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">
+                  <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-[#34C759]/10 text-[#28A745] font-mono font-semibold">
                     142
                   </span>
                 )}
@@ -124,28 +124,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* User Session Footer Badge */}
-      <div className="p-3 m-3 bg-[#13221C] border border-[#1D362C] rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.5)]">
+      <div className="p-3 m-3 bg-[#FBFBFC] border border-black/[0.06] rounded-2xl">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="relative shrink-0">
-              <div className="w-8 h-8 rounded-full bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center text-xs font-bold text-emerald-300">
-                {activeRole === 'tpo' ? 'AS' : 'AP'}
+              <div className="w-8 h-8 rounded-full bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center text-xs font-bold">
+                {activeRole === 'tpo' ? 'TP' : 'ST'}
               </div>
-              <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#13221C]"></span>
+              <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-[#34C759] ring-2 ring-white"></span>
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="font-semibold text-xs text-[#F1F5F9] truncate leading-tight">
-                {activeRole === 'tpo' ? 'Dr. Arjun Sharma' : 'Aarav Patel'}
+              <span className="font-semibold text-xs text-[#1D1D1F] truncate leading-tight">
+                {activeRole === 'tpo' ? 'TPO Administrator' : 'Student Portal'}
               </span>
-              <span className="text-[10px] text-[#94A3B8] truncate leading-tight">
-                {activeRole === 'tpo' ? 'Head Corporate Relations' : '22CS104 (CSE - A)'}
+              <span className="text-[10px] text-[#86868B] truncate leading-tight">
+                {activeRole === 'tpo' ? 'Corporate Relations Directorate' : 'Class of 2026'}
               </span>
             </div>
           </div>
           <button
             onClick={() => setActiveRole(activeRole === 'tpo' ? 'student' : 'tpo')}
             title="Toggle user session"
-            className="p-1.5 text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[#1D362C] rounded-lg transition-colors"
+            className="p-1.5 text-[#86868B] hover:text-[#1D1D1F] hover:bg-black/[0.05] rounded-lg transition-colors cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
           </button>

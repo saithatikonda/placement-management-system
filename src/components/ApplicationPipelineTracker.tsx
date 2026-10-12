@@ -2,15 +2,9 @@ import React, { useState } from 'react';
 import { 
   CheckCircle2, 
   Clock, 
-  Calendar, 
   Video, 
-  FileText, 
-  AlertCircle, 
-  ChevronRight,
-  ExternalLink,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck
+  ShieldCheck, 
+  ExternalLink 
 } from 'lucide-react';
 import { JobDrive } from '../types/pms';
 
@@ -59,7 +53,7 @@ export const ApplicationPipelineTracker: React.FC<ApplicationPipelineTrackerProp
       date: 'Oct 14, 2026 • 10:00 AM IST',
       status: 'active',
       score: 'Scheduled Today',
-      meetingUrl: 'https://teams.microsoft.com/meet/recruitment-sde-402',
+      meetingUrl: 'https://teams.microsoft.com',
     },
     {
       id: 'step-5',
@@ -81,51 +75,48 @@ export const ApplicationPipelineTracker: React.FC<ApplicationPipelineTrackerProp
 
   if (!currentDrive) {
     return (
-      <div className="pms-card rounded-2xl p-8 text-center">
-        <Clock className="w-10 h-10 text-emerald-400 mx-auto mb-2 opacity-60" />
-        <h3 className="text-base font-bold text-[#F1F5F9]">No active applications in pipeline</h3>
-        <p className="text-xs text-[#94A3B8] mt-1">
-          Apply to an open recruitment drive from the Job Grid to start tracking your rounds.
+      <div className="apple-card p-8 text-center">
+        <Clock className="w-10 h-10 text-[#0071E3] mx-auto mb-2 opacity-60" />
+        <h3 className="text-base font-bold text-[#1D1D1F]">No active applications in pipeline</h3>
+        <p className="text-xs text-[#6E6E73] mt-1">
+          Apply to an open recruitment drive to start tracking your rounds.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="pms-card rounded-2xl p-6 mb-8 relative overflow-hidden">
-      {/* Background ambient subtle glow */}
-      <div className="absolute top-0 right-1/4 w-72 h-72 bg-[#F97316]/5 pointer-events-none rounded-full blur-3xl"></div>
-
+    <div className="apple-card p-6 mb-8 relative overflow-hidden">
       {/* Header and Drive Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#1D362C]">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-black/[0.06]">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+          <div className="p-2.5 rounded-xl bg-[#0071E3]/10 text-[#0071E3]">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-[#F1F5F9] tracking-tight">
+            <h3 className="text-lg font-bold text-[#1D1D1F] tracking-tight">
               Application Pipeline Tracker
             </h3>
-            <p className="text-xs text-[#94A3B8]">
+            <p className="text-xs text-[#6E6E73]">
               Live interview stages, slot invitations, and real-time round evaluations
             </p>
           </div>
         </div>
 
         {/* Drive selector tabs */}
-        <div className="flex items-center gap-2">
+        <div className="bg-black/[0.05] p-1 rounded-full flex items-center gap-1">
           {appliedDrives.map((d) => (
             <button
               key={d.id}
               onClick={() => setSelectedDriveId(d.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-2 ${
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer ${
                 selectedDriveId === d.id
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
-                  : 'bg-[#0B1612] text-[#94A3B8] border border-[#1D362C] hover:text-[#F1F5F9]'
+                  ? 'bg-white text-[#1D1D1F] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                  : 'text-[#6E6E73] hover:text-[#1D1D1F]'
               }`}
             >
               <span>{d.companyName}</span>
-              <span className="text-[10px] px-1 py-0.2 rounded bg-black/40 text-[#94A3B8] font-mono">
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/[0.05] text-[#86868B] font-mono">
                 {d.ctc}
               </span>
             </button>
@@ -133,25 +124,25 @@ export const ApplicationPipelineTracker: React.FC<ApplicationPipelineTrackerProp
         </div>
       </div>
 
-      {/* Active Phase Callout Banner with Warm Amber Highlights */}
-      <div className="mt-5 p-4 bg-[#0B1612] border border-[#F97316]/30 rounded-xl flex flex-wrap items-center justify-between gap-4 shadow-[0_0_20px_rgba(249,115,22,0.1)]">
+      {/* Active Phase Callout Banner */}
+      <div className="mt-5 p-4 bg-[#FBFBFC] border border-black/[0.06] rounded-2xl flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-[#F97316]/15 border border-[#F97316]/40 flex items-center justify-center text-[#F97316]">
+          <div className="w-10 h-10 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center font-bold">
             <Video className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#FB923C]">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#0071E3]">
                 Current Actionable Stage:
               </span>
-              <span className="text-xs font-bold text-[#F1F5F9]">
+              <span className="text-xs font-bold text-[#1D1D1F]">
                 Technical Round 2 (System Design)
               </span>
             </div>
-            <div className="text-xs text-[#94A3B8] mt-0.5 flex items-center gap-2">
+            <div className="text-xs text-[#6E6E73] mt-0.5 flex items-center gap-2">
               <span>Date: Oct 14, 2026 • 10:00 AM IST</span>
               <span>•</span>
-              <span className="text-emerald-400 font-medium">Interviewer: Principal SDE, Azure Core</span>
+              <span className="text-[#34C759] font-medium">Interviewer: Principal SDE, Azure Core</span>
             </div>
           </div>
         </div>
@@ -161,7 +152,7 @@ export const ApplicationPipelineTracker: React.FC<ApplicationPipelineTrackerProp
             href="https://teams.microsoft.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 bg-[#F97316] hover:bg-[#EA580C] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-[0_0_16px_rgba(249,115,22,0.35)] active:scale-[0.98] transition-all"
+            className="px-4 py-2 bg-[#0071E3] hover:bg-[#0077ED] text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-[0_2px_8px_rgba(0,113,227,0.25)] active:scale-[0.98] transition-all"
           >
             <Video className="w-3.5 h-3.5" />
             <span>Join Teams Interview</span>
@@ -180,48 +171,48 @@ export const ApplicationPipelineTracker: React.FC<ApplicationPipelineTrackerProp
           return (
             <div
               key={stage.id}
-              className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all relative ${
+              className={`p-3.5 rounded-2xl border flex flex-col justify-between transition-all relative ${
                 isActive
-                  ? 'bg-[#182C24] border-[#F97316]/60 shadow-[0_0_16px_rgba(249,115,22,0.15)] ring-1 ring-[#F97316]/40'
+                  ? 'bg-white border-[#0071E3] shadow-[0_4px_16px_rgba(0,113,227,0.12)] ring-2 ring-[#0071E3]/20'
                   : isCompleted
-                  ? 'bg-[#0B1612] border-emerald-500/30'
-                  : 'bg-[#0B1612]/60 border-[#1D362C]/60 opacity-60'
+                  ? 'bg-[#FBFBFC] border-black/[0.06]'
+                  : 'bg-[#F5F5F7] border-black/[0.04] opacity-60'
               }`}
             >
               <div>
                 {/* Step indicator */}
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-mono font-bold text-[#94A3B8]">
+                  <span className="text-[10px] font-mono font-bold text-[#86868B]">
                     0{idx + 1}
                   </span>
                   {isCompleted && (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <CheckCircle2 className="w-4 h-4 text-[#34C759]" />
                   )}
                   {isActive && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#F97316] animate-pulse shadow-[0_0_8px_#F97316]"></span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#0071E3] animate-pulse"></span>
                   )}
                   {isUpcoming && (
-                    <Clock className="w-3.5 h-3.5 text-[#94A3B8]" />
+                    <Clock className="w-3.5 h-3.5 text-[#86868B]" />
                   )}
                 </div>
 
-                <h4 className="text-xs font-bold text-[#F1F5F9] leading-tight">
+                <h4 className="text-xs font-bold text-[#1D1D1F] leading-tight">
                   {stage.title}
                 </h4>
-                <p className="text-[11px] text-[#94A3B8] mt-1 leading-snug line-clamp-2">
+                <p className="text-[11px] text-[#6E6E73] mt-1 leading-snug line-clamp-2">
                   {stage.subtitle}
                 </p>
               </div>
 
-              <div className="mt-3 pt-2 border-t border-[#1D362C]/60">
-                <div className="text-[10px] font-mono text-[#94A3B8]">{stage.date}</div>
+              <div className="mt-3 pt-2 border-t border-black/[0.06]">
+                <div className="text-[10px] font-mono text-[#86868B]">{stage.date}</div>
                 <div
                   className={`text-[11px] font-semibold mt-0.5 ${
                     isCompleted
-                      ? 'text-emerald-400'
+                      ? 'text-[#34C759]'
                       : isActive
-                      ? 'text-[#FB923C]'
-                      : 'text-[#94A3B8]'
+                      ? 'text-[#0071E3]'
+                      : 'text-[#86868B]'
                   }`}
                 >
                   {stage.score}
