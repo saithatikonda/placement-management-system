@@ -35,26 +35,26 @@
     }
 
     html.dark {
-      /* Optional Dark Night Mode Tokens */
-      --bg-canvas: #090E17;
-      --bg-surface: rgba(15, 23, 42, 0.88);
-      --bg-surface-translucent: rgba(15, 23, 42, 0.8);
-      --bg-inner: rgba(11, 18, 33, 0.85);
-      --bg-inner-active: rgba(56, 189, 248, 0.15);
+      /* Dark + Electric Blue (#0B0F19, #151C2C, #2979FF) */
+      --bg-canvas: #0B0F19;
+      --bg-surface: #151C2C;
+      --bg-surface-translucent: rgba(21, 28, 44, 0.88);
+      --bg-inner: #192236;
+      --bg-inner-active: rgba(41, 121, 255, 0.16);
       --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-subtle-hover: rgba(56, 189, 248, 0.4);
+      --border-subtle-hover: rgba(41, 121, 255, 0.45);
       --text-main: #F8FAFC;
       --text-secondary: #94A3B8;
       --text-muted: #64748B;
-      --accent-blue: #0284C7;
-      --accent-blue-hover: #0EA5E9;
-      --accent-cyan: #38BDF8;
+      --accent-blue: #2979FF;
+      --accent-blue-hover: #448AFF;
+      --accent-cyan: #40C4FF;
       --accent-emerald: #10B981;
       --accent-amber: #F59E0B;
-      --card-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.85), 0 0 25px rgba(2, 132, 199, 0.08);
-      --card-shadow-hover: 0 25px 60px -12px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.2);
-      --input-bg: rgba(11, 18, 33, 0.95);
-      --nav-bg: rgba(15, 23, 42, 0.92);
+      --card-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(41, 121, 255, 0.06);
+      --card-shadow-hover: 0 24px 55px -10px rgba(0, 0, 0, 0.85), 0 0 30px rgba(41, 121, 255, 0.18);
+      --input-bg: #111726;
+      --nav-bg: rgba(21, 28, 44, 0.92);
     }
 
     body {
@@ -68,8 +68,8 @@
     }
 
     html.dark body {
-      background: radial-gradient(circle at 50% -15%, #1e1b4b 0%, #0b1120 45%, #030712 100%) fixed;
-      background-color: var(--bg-canvas);
+      background: radial-gradient(circle at 50% -15%, #151C2C 0%, #0E1422 55%, #0B0F19 100%) fixed;
+      background-color: #0B0F19;
     }
 
     /* Global Inputs */
@@ -118,8 +118,8 @@
       border: 1px solid rgba(0, 0, 0, 0.06);
     }
     html.dark .ios-segmented {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      background: #111726;
+      border: 1px solid rgba(41, 121, 255, 0.25);
     }
 
     .ios-seg-btn {
@@ -143,10 +143,10 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
     html.dark .ios-seg-btn.active {
-      background: rgba(56, 189, 248, 0.22);
-      color: #38BDF8;
-      border: 1px solid rgba(56, 189, 248, 0.45);
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
+      background: #2979FF;
+      color: #FFFFFF;
+      border: 1px solid #2979FF;
+      box-shadow: 0 0 16px rgba(41, 121, 255, 0.45);
     }
 
     /* Interactive Dream Job Cards */
@@ -268,65 +268,91 @@
   <!-- ==========================================================================
        TOP NAVIGATION BAR WITH APPLE AESTHETICS & LIVE THEME TOGGLE
        ========================================================================== -->
-  <header class="apple-card mb-4 sm:mb-6 px-3.5 sm:px-5 py-3 sm:py-3.5 flex flex-wrap items-center justify-between gap-3 sm:gap-4 sticky top-2 sm:top-3 z-40">
-    <div class="flex items-center gap-2.5 sm:gap-3">
-      <!-- Apple-style App Icon -->
-      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 shrink-0">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-        </svg>
-      </div>
-      <div>
-        <div class="flex items-center gap-1.5 sm:gap-2">
-          <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Campus Placement Portal</span>
-          <span class="px-1.5 sm:px-2 py-0.2 rounded-full text-[9px] sm:text-[10px] font-semibold bg-blue-100 text-blue-700 border border-blue-200" id="portal-version-badge">iOS Pro v2.4</span>
+  <header class="apple-card mb-5 sm:mb-6 px-4 sm:px-6 py-3.5 sticky top-2 sm:top-3 z-40">
+    <!-- Top Row: App Title (Left), Desktop Stepper (Center), Action Buttons (Right) -->
+    <div class="flex items-center justify-between gap-3 sm:gap-4 flex-wrap md:flex-nowrap">
+      <!-- Left: Logo & Portal Title -->
+      <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
         </div>
-        <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight">Student Intelligence & Career Suite</div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Campus Placement Portal</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[9px] sm:text-[10px] font-semibold bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800" id="portal-version-badge">iOS Pro v2.4</span>
+          </div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight">Student Intelligence & Career Suite</div>
+        </div>
+      </div>
+
+      <!-- Center: 4-Step Linear Pipeline Stepper (Visible in center on md+, scrollable below on mobile) -->
+      <div class="hidden md:flex items-center justify-center flex-1 max-w-xl px-2">
+        <div id="flow-stepper-desktop" class="ios-segmented flex items-center gap-1 text-xs py-1 px-1.5">
+          <button onclick="showStep(1)" id="step-nav-1" class="ios-seg-btn active">
+            1. Login
+          </button>
+          <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
+          <button onclick="showStep(2)" id="step-nav-2" class="ios-seg-btn">
+            2. Resume & Dream Job
+          </button>
+          <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
+          <button onclick="showStep(3)" id="step-nav-3" class="ios-seg-btn">
+            3. AI Scanner
+          </button>
+          <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
+          <button onclick="showStep(4)" id="step-nav-4" class="ios-seg-btn">
+            4. Matched Roles
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Action Buttons (Theme Toggle, Back & Logout) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto md:ml-0">
+        <!-- Apple Light / Dark Mode Toggle Button -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-black/[0.04] dark:bg-slate-800/90 text-slate-700 dark:text-sky-300 border border-black/[0.08] dark:border-slate-700/80 hover:bg-black/[0.08] dark:hover:bg-slate-700/80 transition-all flex items-center gap-1 shadow-xs cursor-pointer" title="Toggle Apple Light / Dark Mode">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel" class="hidden sm:inline font-medium text-xs">Light Mode</span>
+        </button>
+
+        <button onclick="goBack()" id="btn-back" class="hidden px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-medium btn-apple-secondary flex items-center gap-1 cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          <span class="hidden sm:inline">Back</span>
+        </button>
+
+        <!-- Logout button is strictly HIDDEN until user logs in -->
+        <button onclick="logout()" id="btn-logout" class="hidden px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 transition-all flex items-center gap-1 cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          <span class="hidden sm:inline">Logout</span>
+        </button>
       </div>
     </div>
 
-    <!-- Actions: Theme Toggle, Back & Logout on top-right on mobile -->
-    <div class="flex items-center gap-1.5 sm:gap-2 ml-auto lg:ml-0">
-      <!-- Apple Light / Dark Mode Toggle Button -->
-      <button id="themeToggleBtn" onclick="toggleTheme()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-black/[0.04] dark:bg-slate-800/90 text-slate-700 dark:text-sky-300 border border-black/[0.08] dark:border-slate-700/80 hover:bg-black/[0.08] dark:hover:bg-slate-700/80 transition-all flex items-center gap-1 shadow-xs cursor-pointer" title="Toggle Apple Light / Dark Mode">
-        <span id="themeIcon">☀️</span>
-        <span id="themeLabel" class="hidden sm:inline font-medium text-xs">Light Mode</span>
-      </button>
-
-      <button onclick="goBack()" id="btn-back" class="hidden px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-medium btn-apple-secondary flex items-center gap-1 cursor-pointer">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        <span class="hidden sm:inline">Back</span>
-      </button>
-
-      <!-- Logout button is strictly HIDDEN until user logs in -->
-      <button onclick="logout()" id="btn-logout" class="hidden px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 transition-all flex items-center gap-1 cursor-pointer">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-        <span class="hidden sm:inline">Logout</span>
-      </button>
-    </div>
-
-    <!-- 4-Step Linear Pipeline Capsule (Full width and horizontally scrollable on mobile) -->
-    <div class="w-full lg:w-auto order-last lg:order-none">
-      <div id="flow-stepper" class="ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 overflow-x-auto max-w-full">
-        <button onclick="showStep(1)" id="step-nav-1" class="ios-seg-btn active">
+    <!-- Mobile Stepper Row (Visible only on screens below md breakpoint) -->
+    <div class="md:hidden mt-3 pt-2.5 border-t border-black/[0.05] dark:border-white/[0.08] flex items-center justify-center">
+      <div id="flow-stepper-mobile" class="ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 overflow-x-auto max-w-full">
+        <button onclick="showStep(1)" id="step-nav-mobile-1" class="ios-seg-btn active">
           1. Login
         </button>
         <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-        <button onclick="showStep(2)" id="step-nav-2" class="ios-seg-btn">
-          2. Resume & Dream Job
+        <button onclick="showStep(2)" id="step-nav-mobile-2" class="ios-seg-btn">
+          2. Resume
         </button>
         <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-        <button onclick="showStep(3)" id="step-nav-3" class="ios-seg-btn">
+        <button onclick="showStep(3)" id="step-nav-mobile-3" class="ios-seg-btn">
           3. AI Scanner
         </button>
         <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-        <button onclick="showStep(4)" id="step-nav-4" class="ios-seg-btn">
+        <button onclick="showStep(4)" id="step-nav-mobile-4" class="ios-seg-btn">
           4. Matched Roles
         </button>
       </div>
+    </div>
 
-      <!-- Separate Post-Selection Workstation Navigation (Visible once authenticated) -->
-      <div id="post-selection-nav" class="hidden ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 mt-2 overflow-x-auto max-w-full">
+    <!-- Separate Post-Selection Workstation Navigation (Visible once authenticated) -->
+    <div id="post-selection-nav" class="hidden mt-3 pt-2.5 border-t border-black/[0.05] dark:border-white/[0.08] flex items-center justify-center">
+      <div class="ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 overflow-x-auto max-w-full">
         <button onclick="showSection('offers')" id="section-nav-offers" class="ios-seg-btn flex items-center gap-1.5 cursor-pointer" title="Official Offer Letters">
           <span>📜 Offers</span>
           <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 font-bold">2</span>
@@ -2350,15 +2376,17 @@ class LRUCache<K, V> {
         }
       }
 
-      // 2. Manage 4-step stepper pills
+      // 2. Manage 4-step stepper pills (both desktop and mobile)
       for (let i = 1; i <= 4; i++) {
         const navEl = document.getElementById('step-nav-' + i);
+        const navMobEl = document.getElementById('step-nav-mobile-' + i);
         if (navEl) {
-          if (i === step) {
-            navEl.classList.add('active');
-          } else {
-            navEl.classList.remove('active');
-          }
+          if (i === step) navEl.classList.add('active');
+          else navEl.classList.remove('active');
+        }
+        if (navMobEl) {
+          if (i === step) navMobEl.classList.add('active');
+          else navMobEl.classList.remove('active');
         }
       }
 
@@ -2410,10 +2438,12 @@ class LRUCache<K, V> {
         if (screenEl) screenEl.classList.add('step-hidden');
       }
 
-      // Remove active from 4-step stepper
+      // Remove active from 4-step stepper (both desktop and mobile)
       for (let i = 1; i <= 4; i++) {
         const navEl = document.getElementById('step-nav-' + i);
+        const navMobEl = document.getElementById('step-nav-mobile-' + i);
         if (navEl) navEl.classList.remove('active');
+        if (navMobEl) navMobEl.classList.remove('active');
       }
 
       // Show requested section
