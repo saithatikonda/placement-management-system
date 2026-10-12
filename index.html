@@ -235,6 +235,32 @@
       opacity: 0;
       transform: translateY(8px);
     }
+
+    /* Mobile Enhancements & Touch Targets */
+    @media (max-width: 640px) {
+      .apple-card {
+        border-radius: 16px;
+      }
+      .ios-segmented {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+        max-width: 100%;
+        scrollbar-width: none;
+      }
+      .ios-segmented::-webkit-scrollbar {
+        display: none;
+      }
+      .ios-seg-btn {
+        padding: 5px 10px;
+        font-size: 10px;
+        flex-shrink: 0;
+      }
+      #flow-stepper {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
   </style>
 </head>
 <body class="p-3 sm:p-6 min-h-screen flex flex-col">
@@ -242,75 +268,77 @@
   <!-- ==========================================================================
        TOP NAVIGATION BAR WITH APPLE AESTHETICS & LIVE THEME TOGGLE
        ========================================================================== -->
-  <header class="apple-card mb-6 px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-3 z-40">
-    <div class="flex items-center gap-3">
+  <header class="apple-card mb-4 sm:mb-6 px-3.5 sm:px-5 py-3 sm:py-3.5 flex flex-wrap items-center justify-between gap-3 sm:gap-4 sticky top-2 sm:top-3 z-40">
+    <div class="flex items-center gap-2.5 sm:gap-3">
       <!-- Apple-style App Icon -->
-      <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 shrink-0">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
         </svg>
       </div>
       <div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Campus Placement Portal</span>
-          <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700 border border-blue-200" id="portal-version-badge">iOS Pro v2.4</span>
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Campus Placement Portal</span>
+          <span class="px-1.5 sm:px-2 py-0.2 rounded-full text-[9px] sm:text-[10px] font-semibold bg-blue-100 text-blue-700 border border-blue-200" id="portal-version-badge">iOS Pro v2.4</span>
         </div>
-        <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">Student Intelligence & Career Suite</div>
+        <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight">Student Intelligence & Career Suite</div>
       </div>
     </div>
 
-    <!-- 4-Step Linear Pipeline Capsule (Flow strictly ends at Step 4: Matched Roles) -->
-    <div id="flow-stepper" class="ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 scrollbar-none">
-      <button onclick="showStep(1)" id="step-nav-1" class="ios-seg-btn active">
-        1. Login
-      </button>
-      <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-      <button onclick="showStep(2)" id="step-nav-2" class="ios-seg-btn">
-        2. Resume & Dream Job
-      </button>
-      <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-      <button onclick="showStep(3)" id="step-nav-3" class="ios-seg-btn">
-        3. AI Scanner
-      </button>
-      <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-      <button onclick="showStep(4)" id="step-nav-4" class="ios-seg-btn">
-        4. Matched Roles
-      </button>
-    </div>
-
-    <!-- Separate Post-Selection Workstation Navigation (Visible once authenticated) -->
-    <div id="post-selection-nav" class="hidden ios-segmented flex items-center gap-1 text-xs py-1 px-1.5">
-      <button onclick="showSection('offers')" id="section-nav-offers" class="ios-seg-btn flex items-center gap-1.5 cursor-pointer" title="Official Offer Letters">
-        <span>📜 Offers</span>
-        <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 font-bold">2</span>
-      </button>
-      <button onclick="showSection('meetings')" id="section-nav-meetings" class="ios-seg-btn flex items-center gap-1.5 cursor-pointer" title="Interview Meetings & Panels">
-        <span>🎥 Meetings</span>
-        <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 font-bold">3</span>
-      </button>
-      <button onclick="showSection('settings')" id="section-nav-settings" class="ios-seg-btn flex items-center gap-1 cursor-pointer" title="Student Settings">
-        <span>⚙️ Settings</span>
-      </button>
-    </div>
-
-    <!-- Actions: Theme Toggle (Apple Light / Dark), Back & Logout -->
-    <div class="flex items-center gap-2">
+    <!-- Actions: Theme Toggle, Back & Logout on top-right on mobile -->
+    <div class="flex items-center gap-1.5 sm:gap-2 ml-auto lg:ml-0">
       <!-- Apple Light / Dark Mode Toggle Button -->
-      <button id="themeToggleBtn" onclick="toggleTheme()" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-black/[0.04] dark:bg-slate-800/90 text-slate-700 dark:text-sky-300 border border-black/[0.08] dark:border-slate-700/80 hover:bg-black/[0.08] dark:hover:bg-slate-700/80 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer" title="Toggle Apple Light / Dark Mode">
+      <button id="themeToggleBtn" onclick="toggleTheme()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-black/[0.04] dark:bg-slate-800/90 text-slate-700 dark:text-sky-300 border border-black/[0.08] dark:border-slate-700/80 hover:bg-black/[0.08] dark:hover:bg-slate-700/80 transition-all flex items-center gap-1 shadow-xs cursor-pointer" title="Toggle Apple Light / Dark Mode">
         <span id="themeIcon">☀️</span>
-        <span id="themeLabel" class="font-medium text-xs">Light Mode</span>
+        <span id="themeLabel" class="hidden sm:inline font-medium text-xs">Light Mode</span>
       </button>
 
-      <button onclick="goBack()" id="btn-back" class="hidden px-3.5 py-1.5 rounded-xl text-xs font-medium btn-apple-secondary flex items-center gap-1.5 cursor-pointer">
+      <button onclick="goBack()" id="btn-back" class="hidden px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-medium btn-apple-secondary flex items-center gap-1 cursor-pointer">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        Back
+        <span class="hidden sm:inline">Back</span>
       </button>
 
       <!-- Logout button is strictly HIDDEN until user logs in -->
-      <button onclick="logout()" id="btn-logout" class="hidden px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 transition-all flex items-center gap-1.5 cursor-pointer">
+      <button onclick="logout()" id="btn-logout" class="hidden px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 transition-all flex items-center gap-1 cursor-pointer">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-        Logout
+        <span class="hidden sm:inline">Logout</span>
       </button>
+    </div>
+
+    <!-- 4-Step Linear Pipeline Capsule (Full width and horizontally scrollable on mobile) -->
+    <div class="w-full lg:w-auto order-last lg:order-none">
+      <div id="flow-stepper" class="ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 overflow-x-auto max-w-full">
+        <button onclick="showStep(1)" id="step-nav-1" class="ios-seg-btn active">
+          1. Login
+        </button>
+        <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
+        <button onclick="showStep(2)" id="step-nav-2" class="ios-seg-btn">
+          2. Resume & Dream Job
+        </button>
+        <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
+        <button onclick="showStep(3)" id="step-nav-3" class="ios-seg-btn">
+          3. AI Scanner
+        </button>
+        <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
+        <button onclick="showStep(4)" id="step-nav-4" class="ios-seg-btn">
+          4. Matched Roles
+        </button>
+      </div>
+
+      <!-- Separate Post-Selection Workstation Navigation (Visible once authenticated) -->
+      <div id="post-selection-nav" class="hidden ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 mt-2 overflow-x-auto max-w-full">
+        <button onclick="showSection('offers')" id="section-nav-offers" class="ios-seg-btn flex items-center gap-1.5 cursor-pointer" title="Official Offer Letters">
+          <span>📜 Offers</span>
+          <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 font-bold">2</span>
+        </button>
+        <button onclick="showSection('meetings')" id="section-nav-meetings" class="ios-seg-btn flex items-center gap-1.5 cursor-pointer" title="Interview Meetings & Panels">
+          <span>🎥 Meetings</span>
+          <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 font-bold">3</span>
+        </button>
+        <button onclick="showSection('settings')" id="section-nav-settings" class="ios-seg-btn flex items-center gap-1 cursor-pointer" title="Student Settings">
+          <span>⚙️ Settings</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -676,10 +704,10 @@
           <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
             <div>
               <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Target CTC Bracket:</span>
-              <div class="flex items-center gap-2 mt-1">
-                <button type="button" onclick="setCtc(this, '15-25 LPA')" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600">15-25 LPA</button>
-                <button type="button" onclick="setCtc(this, '25-35 LPA')" class="px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white shadow-sm">25-35 LPA (Target)</button>
-                <button type="button" onclick="setCtc(this, '35+ LPA')" class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600">35+ LPA (Super Dream)</button>
+              <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1">
+                <button type="button" onclick="setCtc(this, '15-25 LPA')" class="px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600">15-25 LPA</button>
+                <button type="button" onclick="setCtc(this, '25-35 LPA')" class="px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white shadow-sm">25-35 LPA (Target)</button>
+                <button type="button" onclick="setCtc(this, '35+ LPA')" class="px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-blue-600">35+ LPA (Super Dream)</button>
               </div>
             </div>
             <div class="text-right">
@@ -778,34 +806,34 @@
     <!-- ====================================================================== -->
     <section id="screen-4" class="step-view step-hidden w-full py-2">
       <!-- Header Banner -->
-      <div class="apple-card p-6 mb-6">
-        <div class="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">✓ VERIFIED PROFILE</span>
-              <span id="selected-dream-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">SUPER DREAM ELIGIBLE</span>
-              <span id="db-record-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300 flex items-center gap-1">
+      <div class="apple-card p-4 sm:p-6 mb-5 sm:mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+          <div class="w-full sm:w-auto">
+            <div class="flex items-center gap-1.5 sm:gap-2 mb-1.5 flex-wrap">
+              <span class="px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">✓ VERIFIED PROFILE</span>
+              <span id="selected-dream-badge" class="px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">SUPER DREAM ELIGIBLE</span>
+              <span id="db-record-badge" class="px-2 sm:px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300 flex items-center gap-1">
                 <span>⚡ GROQ LLAMA 3.1</span>
                 <span>• SUPABASE DB #1</span>
               </span>
             </div>
-            <h1 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight" id="report-title">
+            <h1 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight" id="report-title">
               AI Placement Fitment Report for <span id="report-candidate-name">Candidate</span>
             </h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">
               Roll No: <span id="report-roll-number" class="font-mono text-slate-800 dark:text-slate-200 font-bold">—</span> • CGPA: <span id="report-cgpa" class="text-emerald-600 font-bold">—</span> • Computer Science & Engineering • 0 Active Backlogs
             </p>
           </div>
 
           <!-- Quick Stats Pills -->
-          <div class="flex items-center gap-3">
-            <div class="apple-inner px-4 py-2 text-right">
-              <div class="text-[10px] uppercase text-slate-500 font-bold">Matched Roles</div>
-              <div class="text-lg font-black text-blue-600" id="report-matched-count">0 Domains</div>
+          <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end mt-2 sm:mt-0">
+            <div class="apple-inner px-3 sm:px-4 py-1.5 sm:py-2 text-right flex-1 sm:flex-initial">
+              <div class="text-[9px] sm:text-[10px] uppercase text-slate-500 font-bold">Matched Roles</div>
+              <div class="text-base sm:text-lg font-black text-blue-600" id="report-matched-count">0 Domains</div>
             </div>
-            <div class="apple-inner px-4 py-2 text-right">
-              <div class="text-[10px] uppercase text-slate-500 font-bold">Top Package</div>
-              <div class="text-lg font-black text-emerald-600" id="report-top-package">—</div>
+            <div class="apple-inner px-3 sm:px-4 py-1.5 sm:py-2 text-right flex-1 sm:flex-initial">
+              <div class="text-[9px] sm:text-[10px] uppercase text-slate-500 font-bold">Top Package</div>
+              <div class="text-base sm:text-lg font-black text-emerald-600" id="report-top-package">—</div>
             </div>
           </div>
         </div>
@@ -1614,20 +1642,20 @@
   <!-- ====================================================================== -->
   <!-- MODAL: OFFICIAL OFFER LETTERHEAD PREVIEW & DIGITAL CONTRACT           -->
   <!-- ====================================================================== -->
-  <div id="modal-offer-preview" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-    <div class="apple-card max-w-2xl w-full p-6 sm:p-8 relative my-auto max-h-[92vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-blue-500/30 shadow-2xl">
-      <button onclick="closeModal('modal-offer-preview')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white p-2 cursor-pointer">
+  <div id="modal-offer-preview" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-2.5 sm:p-5 overflow-y-auto">
+    <div class="apple-card max-w-2xl w-full p-4 sm:p-8 relative my-auto max-h-[92vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-blue-500/30 shadow-2xl">
+      <button onclick="closeModal('modal-offer-preview')" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white p-1.5 cursor-pointer">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
 
       <!-- Formal Letterhead -->
-      <div class="border-b border-slate-200 dark:border-slate-700/80 pb-5 mb-5 flex items-center justify-between gap-4">
+      <div class="border-b border-slate-200 dark:border-slate-700/80 pb-4 sm:pb-5 mb-4 sm:mb-5 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
         <div>
-          <div class="text-xs uppercase font-extrabold tracking-widest text-amber-600 dark:text-amber-400" id="modal-offer-badge">SUPER DREAM CAMPUS OFFER</div>
-          <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1" id="modal-offer-company">Amazon Development Centre (India) Private Limited</h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Campus Corporate Placements • Employment Contract & Offer of Appointment</p>
+          <div class="text-[10px] sm:text-xs uppercase font-extrabold tracking-widest text-amber-600 dark:text-amber-400" id="modal-offer-badge">SUPER DREAM CAMPUS OFFER</div>
+          <h2 class="text-lg sm:text-2xl font-black text-slate-900 dark:text-white mt-1" id="modal-offer-company">Amazon Development Centre (India) Private Limited</h2>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Campus Corporate Placements • Employment Contract & Offer of Appointment</p>
         </div>
-        <div class="text-right shrink-0">
+        <div class="text-left sm:text-right shrink-0">
           <div class="text-[10px] uppercase font-bold text-slate-400">Official Dossier Ref</div>
           <div class="font-mono text-xs font-bold text-blue-600 dark:text-sky-400" id="modal-offer-ref">AMZ-BLR-2026-SDE-8491</div>
           <div class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Date: October 12, 2026</div>
@@ -1694,15 +1722,15 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-2">
-          <button onclick="closeModal('modal-offer-preview')" class="py-2.5 px-4 rounded-xl btn-apple-secondary text-xs font-semibold cursor-pointer">
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <button onclick="closeModal('modal-offer-preview')" class="py-2.5 px-3.5 rounded-xl btn-apple-secondary text-xs font-semibold cursor-pointer flex-1 sm:flex-initial text-center">
             Close
           </button>
-          <button onclick="signOfferFromModal()" id="btn-modal-sign" class="py-2.5 px-5 rounded-xl btn-apple-primary text-xs font-bold shadow-md flex items-center gap-1.5 cursor-pointer">
+          <button onclick="signOfferFromModal()" id="btn-modal-sign" class="py-2.5 px-4 rounded-xl btn-apple-primary text-xs font-bold shadow-md flex items-center justify-center gap-1.5 cursor-pointer flex-1 sm:flex-initial">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-            <span>Accept & Sign Contract</span>
+            <span>Accept & Sign</span>
           </button>
-          <button onclick="downloadOfferPdf('Official Offer')" class="py-2.5 px-4 rounded-xl btn-apple-secondary text-slate-700 dark:text-sky-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer">
+          <button onclick="downloadOfferPdf('Official Offer')" class="py-2.5 px-3.5 rounded-xl btn-apple-secondary text-slate-700 dark:text-sky-300 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer w-full sm:w-auto">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
             <span>Download Official PDF</span>
           </button>
@@ -1814,26 +1842,26 @@ class LRUCache<K, V> {
       </div>
 
       <!-- Call Control Bar -->
-      <div class="pt-4 mt-2 border-t border-slate-800 flex items-center justify-between gap-3">
+      <div class="pt-4 mt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
         <div class="flex items-center gap-2">
           <!-- Mic Toggle -->
-          <button onclick="toggleVideoMic(this)" class="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white transition-all shadow-sm" title="Mute/Unmute Mic">
-            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+          <button onclick="toggleVideoMic(this)" class="p-2.5 sm:p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white transition-all shadow-sm" title="Mute/Unmute Mic">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
           </button>
           <!-- Camera Toggle -->
-          <button onclick="toggleVideoCam(this)" class="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white transition-all shadow-sm" title="Start/Stop Video">
-            <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          <button onclick="toggleVideoCam(this)" class="p-2.5 sm:p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white transition-all shadow-sm" title="Start/Stop Video">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
           </button>
           <!-- Screen Share -->
-          <button onclick="showToast('Screen sharing started with interview panelist.')" class="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white transition-all shadow-sm" title="Share Screen">
-            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <button onclick="showToast('Screen sharing started with interview panelist.')" class="p-2.5 sm:p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white transition-all shadow-sm" title="Share Screen">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </button>
         </div>
 
         <!-- End Call Button -->
-        <button onclick="closeModal('modal-video-meeting'); showToast('Interview meeting ended. Session feedback recorded.')" class="py-2.5 px-6 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-red-500/25">
+        <button onclick="closeModal('modal-video-meeting'); showToast('Interview meeting ended. Session feedback recorded.')" class="py-2.5 px-4 sm:px-6 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-1.5 sm:gap-2 shadow-lg shadow-red-500/25 ml-auto">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z"/></svg>
-          <span>End Interview Call</span>
+          <span>End Call</span>
         </button>
       </div>
     </div>
