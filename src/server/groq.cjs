@@ -53,20 +53,41 @@ async function callGroqChat(messages, preferredModel = 'llama-3.1-8b-instant') {
 
 async function analyzeResumeWithAI({
   resumeText,
+  fileName = 'uploaded_resume.pdf',
   dreamJob = 'Backend Engineer / Distributed Systems',
   targetCtc = '25 - 35 LPA',
   rollNumber = 'STU-2026',
   cgpa = 8.5
 }) {
-  const systemPrompt = `You are the Principal AI Placement Intelligence Officer for an elite Engineering College Placement Management System.
-Your job is to analyze the student's extracted resume PDF text, cross-reference it against active campus recruiter criteria, and provide:
-1. ATS Score (0 - 100).
-2. Verified Technical Skills found in the resume.
-3. Top 3 Matched Job Roles with eligible on-campus companies, estimated CTC, and fit percentages.
-4. Specific Skill Gap Analysis and 4-Week Preparation Roadmap tailored specifically to the student's Dream Job: "${dreamJob}" (Target: ${targetCtc}).
+  const systemPrompt = `You are the Principal AI Resume Verification and Career Intelligence Officer for an elite College Placement Portal.
 
-Respond ONLY with valid JSON following this exact schema:
+MANDATORY FIRST STEP — DOCUMENT AUTHENTICITY CLASSIFICATION:
+Before generating any placement analysis, you MUST inspect the provided document's file name and text content to determine whether it is genuinely an INDIVIDUAL CANDIDATE'S RESUME / CV, OR an invalid / non-resume document.
+
+NON-RESUME / INVALID DOCUMENTS (MUST BE REJECTED WITH isResume: false):
+1. Academic textbooks, lecture notes, study materials, or theory documents (e.g. "DBMS Theory", "Database Management Systems Notes", "Operating Systems Theory", "Data Structures Tutorial", "Computer Networks Notes", chapters, module notes).
+2. Question papers, previous exams, syllabus sheets, lab manuals, assignment submissions, class project reports.
+3. Utility bills, invoices, receipts, financial statements, tickets, boarding passes, ID cards.
+4. General technical essays, articles, documentation, books.
+
+WHAT CONSTITUTES A GENUINE RESUME:
+- An individual person's curriculum vitae (candidate name).
+- Personal contact information (email, phone, LinkedIn, GitHub, or city/address).
+- Individual academic degree or educational qualifications (Degree, College/University, CGPA/GPA/Marks, Passing Year).
+- Individual technical skills and/or projects, internships, or work experience undertaken by the candidate.
+
+IF THE DOCUMENT IS NOT A RESUME OR IS AN INVALID DOCUMENT:
+You MUST respond ONLY with this JSON schema:
 {
+  "isResume": false,
+  "documentType": "Academic Lecture Notes / Textbook / Theory / Syllabus / etc.",
+  "error": "The uploaded document is not a resume or is an invalid document. Detected content: Academic lecture notes/textbook on DBMS Theory. Please upload an individual student resume containing personal education, skills, and projects."
+}
+
+ONLY IF THE DOCUMENT IS TRULY A VALID CANDIDATE RESUME / CV:
+Set "isResume": true and respond with this JSON schema:
+{
+  "isResume": true,
   "atsScore": 90,
   "summary": "Brief 1-2 sentence assessment of candidate profile",
   "candidateName": "Extract Candidate Full Name from resume text (or use Candidate if not found)",
@@ -162,16 +183,16 @@ Respond ONLY with valid JSON following this exact schema:
   }
 }`;
 
-  const userPrompt = `Here is the student's resume content extracted from PDF:
----
-Roll Number: ${rollNumber}
+  const userPrompt = `Uploaded Document Name: "${fileName}"
+Student Roll Number: ${rollNumber}
 Target Dream Job: ${dreamJob}
 Target CTC: ${targetCtc}
 
-Resume Text:
-${resumeText ? resumeText.substring(0, 4000) : 'Technical candidate with Core Java, Spring Boot, REST APIs, MySQL, Git, Data Structures, OOP, algorithms, CGPA 9.42.'}
+Document Extracted Text:
 ---
-Analyze this profile and generate the placement report JSON.`;
+${resumeText ? resumeText.substring(0, 5000) : ''}
+---
+INSTRUCTION: Check whether this document is genuinely an individual candidate's resume/CV. If it is NOT a resume (such as academic theory notes, textbook material like DBMS Theory, syllabus, or an invalid file), return {"isResume": false, "error": "...", "documentType": "..."}. If and only if it is a genuine resume, return the full analysis with "isResume": true.`;
 
   const messages = [
     { role: 'system', content: systemPrompt },

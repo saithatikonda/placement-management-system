@@ -264,34 +264,61 @@ async function handleApiRequest(req, res) {
 
       // Strict Server-Side Resume Verification
       const lower = (resumeText || '').toLowerCase();
+      const lowerName = (fileName || '').toLowerCase();
       const words = lower.split(/\s+/).filter(w => w.length > 1);
       const isTooShort = words.length < 25;
+
+      const nonResumeNameKeywords = ['theory', 'notes', 'syllabus', 'textbook', 'chapter', 'unit', 'exam', 'question', 'assignment', 'lab manual', 'cheatsheet', 'tutorial'];
+      const isNonResumeName = nonResumeNameKeywords.some(kw => lowerName.includes(kw));
+
+      const theoryMarkers = ['chapter', 'unit 1', 'module 1', 'normalization', 'acid properties', 'definition:', 'er diagram', 'relational algebra', 'table of contents'];
+      const matchedTheory = theoryMarkers.filter(k => lower.includes(k)).length;
+
+      const hasEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(resumeText);
+      const hasPhone = /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\b[6-9]\d{9}\b/.test(resumeText);
+      const hasContact = hasEmail || hasPhone || lower.includes('linkedin.com') || lower.includes('github.com');
+
       const nonResumeTerms = ['invoice', 'tax invoice', 'bill of supply', 'receipt voucher', 'payment receipt', 'electricity bill', 'water bill', 'rent agreement'];
       const hasNonResumeMarker = nonResumeTerms.some(term => lower.includes(term));
       const resumeKeywords = ['education', 'skills', 'experience', 'projects', 'b.tech', 'degree', 'cgpa', 'university', 'curriculum', 'internship', 'languages', 'developer'];
       const matchedCount = resumeKeywords.filter(k => lower.includes(k)).length;
 
-      if (isTooShort || (hasNonResumeMarker && matchedCount < 3) || matchedCount < 2) {
+      if (isTooShort || isNonResumeName || (matchedTheory >= 2 && !hasContact) || (hasNonResumeMarker && matchedCount < 3) || !hasContact) {
         res.statusCode = 422;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({
           success: false,
           isNotResume: true,
-          error: 'The uploaded document does not appear to be a resume. Please upload a valid resume containing your education, skills, and projects.'
+          error: `The uploaded document "${fileName}" is not a resume or is an invalid document. Please upload a genuine student resume with personal contact details, education, and technical skills.`
         }));
         return true;
       }
 
-      console.log(`[API] Analyzing resume for ${rollNumber} (Dream Job: ${dreamJob})...`);
+      console.log(`[API] Analyzing resume for ${rollNumber} (File: ${fileName}, Dream Job: ${dreamJob})...`);
 
       // Call Groq AI
       const aiResponse = await analyzeResumeWithAI({
         resumeText,
+        fileName,
         dreamJob,
         targetCtc,
         rollNumber,
         cgpa
       });
+
+      // If AI classification found the document to NOT be a resume:
+      if (aiResponse.analysis && aiResponse.analysis.isResume === false) {
+        console.warn(`[API] Groq AI rejected "${fileName}" as invalid non-resume document:`, aiResponse.analysis.error);
+        res.statusCode = 422;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({
+          success: false,
+          isNotResume: true,
+          error: aiResponse.analysis.error || 'The uploaded document is not a resume or is an invalid document.',
+          documentType: aiResponse.analysis.documentType || 'Non-resume file'
+        }));
+        return true;
+      }
 
       // Save to Supabase PostgreSQL
       const savedRecord = await saveResumeAnalysis({

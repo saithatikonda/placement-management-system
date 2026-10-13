@@ -408,24 +408,7 @@
     header#main-header.header-compact #portal-version-badge {
       display: none !important;
     }
-    header#main-header.header-compact #header-mobile-stepper-wrap {
-      margin-top: 0.25rem !important;
-      padding-top: 0.25rem !important;
-    }
-    header#main-header.header-compact #flow-stepper-mobile {
-      padding: 0.1rem 0.25rem !important;
-      gap: 0.15rem !important;
-    }
-    header#main-header.header-compact #flow-stepper-mobile .ios-seg-btn {
-      padding: 0.2rem 0.45rem !important;
-      font-size: 0.68rem !important;
-      line-height: 1.1 !important;
-    }
-    header#main-header.header-compact #flow-stepper-mobile span {
-      font-size: 0.55rem !important;
-      padding-left: 0.1rem !important;
-      padding-right: 0.1rem !important;
-    }
+
     header#main-header.header-compact #post-selection-nav {
       margin-top: 0.25rem !important;
       padding-top: 0.25rem !important;
@@ -509,26 +492,7 @@
       </div>
     </div>
 
-    <!-- Mobile Stepper Row (Visible only on screens below md breakpoint) -->
-    <div id="header-mobile-stepper-wrap" class="md:hidden mt-3 pt-2.5 border-t border-black/[0.05] dark:border-white/[0.08] flex items-center justify-center transition-all duration-300">
-      <div id="flow-stepper-mobile" class="ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 overflow-x-auto max-w-full">
-        <button onclick="showStep(1)" id="step-nav-mobile-1" class="ios-seg-btn active">
-          1. Login
-        </button>
-        <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-        <button onclick="showStep(2)" id="step-nav-mobile-2" class="ios-seg-btn">
-          2. Resume
-        </button>
-        <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-        <button onclick="showStep(3)" id="step-nav-mobile-3" class="ios-seg-btn">
-          3. AI Scanner
-        </button>
-        <span class="text-slate-400 dark:text-slate-600 text-[10px] px-0.5">›</span>
-        <button onclick="showStep(4)" id="step-nav-mobile-4" class="ios-seg-btn">
-          4. Matched Roles
-        </button>
-      </div>
-    </div>
+
 
     <!-- Separate Post-Selection Workstation Navigation (Visible once authenticated) -->
     <div id="post-selection-nav" class="hidden mt-3 pt-2.5 border-t border-black/[0.05] dark:border-white/[0.08] flex items-center justify-center">
@@ -2558,13 +2522,15 @@ class LRUCache<K, V> {
       }
 
       // 2. Strict Resume Gate: User cannot navigate to step 3 or 4 without a verified resume
-      if (step >= 3 && !lastAiAnalysis) {
-        const isResumeValid = currentResumeText && validateResumeDocument(currentResumeText, currentFileName).isValid;
-        if (!isResumeValid) {
-          showToast('⚠️ Please upload and validate your resume PDF in Step 2 before proceeding.');
+      if (step >= 3) {
+        const validation = validateResumeDocument(currentResumeText, currentFileName);
+        if (!currentResumeText || !validation.isValid) {
+          const reasonMsg = validation.reason || 'Please upload a valid resume PDF';
+          showToast(`❌ Cannot open Matched Roles: ${reasonMsg}`, 6000);
           const resumeAlert = document.getElementById('resume-validation-alert');
-          if (resumeAlert) {
-            resumeAlert.innerHTML = '<strong>⚠️ Resume Required:</strong> Please upload a valid resume PDF with your education, skills, and projects to proceed to AI Scanner & Matched Roles.';
+          const alertText = document.getElementById('resume-validation-alert-text');
+          if (resumeAlert && alertText) {
+            alertText.innerHTML = `<strong>Action Blocked:</strong> The uploaded document is not a resume or is an invalid document (${reasonMsg}). Only verified student resumes containing contact details, degree/CGPA, and technical skills can proceed to AI Scanner & Matched Roles.`;
             resumeAlert.classList.remove('hidden');
           }
           step = 2;
@@ -2585,10 +2551,9 @@ class LRUCache<K, V> {
         }
       }
 
-      // 2. Manage 4-step stepper pills (both desktop and mobile) with auth lock styling
+      // 2. Manage 4-step stepper pills with auth lock styling
       for (let i = 1; i <= 4; i++) {
         const navEl = document.getElementById('step-nav-' + i);
-        const navMobEl = document.getElementById('step-nav-mobile-' + i);
         if (navEl) {
           if (i === step) navEl.classList.add('active');
           else navEl.classList.remove('active');
@@ -2599,18 +2564,6 @@ class LRUCache<K, V> {
           } else {
             navEl.classList.remove('opacity-50');
             navEl.removeAttribute('title');
-          }
-        }
-        if (navMobEl) {
-          if (i === step) navMobEl.classList.add('active');
-          else navMobEl.classList.remove('active');
-
-          if (!isAuthenticated && i > 1) {
-            navMobEl.classList.add('opacity-50');
-            navMobEl.title = '🔒 Sign in required';
-          } else {
-            navMobEl.classList.remove('opacity-50');
-            navMobEl.removeAttribute('title');
           }
         }
       }
@@ -2670,12 +2623,10 @@ class LRUCache<K, V> {
         if (screenEl) screenEl.classList.add('step-hidden');
       }
 
-      // Remove active from 4-step stepper (both desktop and mobile)
+      // Remove active from 4-step stepper
       for (let i = 1; i <= 4; i++) {
         const navEl = document.getElementById('step-nav-' + i);
-        const navMobEl = document.getElementById('step-nav-mobile-' + i);
         if (navEl) navEl.classList.remove('active');
-        if (navMobEl) navMobEl.classList.remove('active');
       }
 
       // Show requested section
@@ -2889,7 +2840,7 @@ class LRUCache<K, V> {
     let lastAiAnalysis = null;
     let isAiAnalyzing = false;
 
-    // Intelligent Resume Document Validator
+    // Intelligent Resume Document Validator with Strict Authentication & Non-Resume Filtering
     function validateResumeDocument(text, fileName = '') {
       if (!text || typeof text !== 'string') {
         return {
@@ -2899,85 +2850,124 @@ class LRUCache<K, V> {
       }
 
       const cleanText = text.toLowerCase();
+      const cleanFileName = (fileName || '').toLowerCase();
       const words = cleanText.split(/\s+/).filter(w => w.length > 1);
 
-      // Brief documents (< 25 words) cannot be a complete student resume
-      if (words.length < 25) {
+      // 1. Strict Filename Checks (Detect academic theory, textbooks, exam questions, syllabus)
+      const nonResumeNameKeywords = [
+        'theory', 'notes', 'syllabus', 'textbook', 'chapter', 'unit', 'module',
+        'exam', 'question', 'assignment', 'lab manual', 'manual', 'tutorial',
+        'cheatsheet', 'handbook', 'lecture', 'slides', 'answers', 'solution',
+        'timetable', 'hallticket', 'admit card', 'paper'
+      ];
+      for (const kw of nonResumeNameKeywords) {
+        if (cleanFileName.includes(kw)) {
+          return {
+            isValid: false,
+            reason: `File "${fileName}" appears to be academic study material or course theory (${kw}), not an individual candidate resume.`
+          };
+        }
+      }
+
+      // 2. Brief documents (< 30 words) cannot be a complete student resume
+      if (words.length < 30) {
         return {
           isValid: false,
-          reason: 'Document text is too brief (less than 25 words detected).'
+          reason: 'Document text is too brief (less than 30 words detected).'
         };
       }
 
-      // Strong non-resume markers (bills, invoices, receipts, legal notices, tickets)
+      // 3. Strong non-resume markers (bills, invoices, receipts, legal notices, tickets)
       const nonResumeMarkers = [
         'invoice', 'tax invoice', 'bill of supply', 'receipt voucher', 'payment receipt',
         'electricity bill', 'water bill', 'telephone bill', 'rent agreement', 'bank statement',
         'boarding pass', 'booking confirmation', 'prescription', 'order summary', 'shipping label',
-        'proforma invoice', 'cash memo', 'toll receipt'
+        'proforma invoice', 'cash memo', 'toll receipt', 'salary slip', 'payslip', 'affidavit'
       ];
-      const hasNonResumeMarker = nonResumeMarkers.some(marker => cleanText.includes(marker));
-
-      // Standard resume categories & technical vocabulary
-      const resumeCategories = {
-        education: [
-          'education', 'b.tech', 'btech', 'b.e', 'bachelor', 'master', 'm.tech', 'mtech',
-          'cgpa', 'gpa', 'percentage', 'university', 'college', 'institute', 'school',
-          'curriculum', 'academics', 'academic', 'degree'
-        ],
-        skills: [
-          'skill', 'skills', 'technical skills', 'programming', 'languages', 'frameworks',
-          'technologies', 'tools', 'java', 'python', 'javascript', 'typescript', 'c++',
-          'c#', 'react', 'node', 'express', 'sql', 'mysql', 'postgresql', 'mongodb',
-          'docker', 'aws', 'cloud', 'git', 'github', 'html', 'css', 'data structures',
-          'algorithms', 'spring', 'django', 'fastapi', 'devops', 'machine learning'
-        ],
-        experienceOrProjects: [
-          'experience', 'internship', 'intern', 'project', 'projects', 'work experience',
-          'employment', 'responsibilities', 'contributions', 'developed', 'implemented',
-          'designed', 'built', 'worked on', 'spearheaded', 'collaborated'
-        ],
-        contactOrDossier: [
-          'resume', 'curriculum vitae', 'cv', 'email', 'phone', 'mobile', 'linkedin',
-          'github', 'portfolio', 'summary', 'objective', 'about me', 'certifications',
-          'achievements', 'awards'
-        ]
-      };
-
-      let matchedCategories = 0;
-      let totalKeywordMatches = 0;
-      const categoryBreakdown = {};
-
-      for (const [category, keywords] of Object.entries(resumeCategories)) {
-        const matches = keywords.filter(kw => cleanText.includes(kw));
-        categoryBreakdown[category] = matches.length;
-        totalKeywordMatches += matches.length;
-        if (matches.length > 0) {
-          matchedCategories++;
-        }
-      }
-
-      // If document contains non-resume flags (e.g. invoice/bill) and lacks complete resume sections
-      if (hasNonResumeMarker && matchedCategories < 3) {
+      if (nonResumeMarkers.some(marker => cleanText.includes(marker))) {
         return {
           isValid: false,
-          reason: 'Document appears to be an invoice, bill, receipt, or non-academic file.'
+          reason: 'Document appears to be a bill, invoice, receipt, or non-resume financial document.'
         };
       }
 
-      // Valid resume must match at least 2 distinct resume categories AND at least 3 keyword occurrences
-      if (matchedCategories >= 2 && totalKeywordMatches >= 3) {
+      // 4. Academic Theory / Textbook / Course Notes detection in content
+      const theoryMarkers = [
+        'chapter', 'unit 1', 'unit 2', 'unit 3', 'unit 4', 'unit 5',
+        'module 1', 'module 2', 'module 3', 'lecture notes',
+        'normalization', '1nf', '2nf', '3nf', 'bcnf', 'acid properties',
+        'relational algebra', 'relational calculus', 'er diagram', 'entity relationship',
+        'definition:', 'definition :', 'theorem', 'table of contents',
+        'course outcomes', 'course objectives', 'question bank',
+        'marks questions', 'section a', 'section b', 'reference books'
+      ];
+      const matchedTheory = theoryMarkers.filter(kw => cleanText.includes(kw)).length;
+
+      // 5. Personal Candidate Contact Information (Email, Phone, LinkedIn/GitHub)
+      const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+      const phoneRegex = /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\b[6-9]\d{9}\b/;
+      const hasEmail = emailRegex.test(text);
+      const hasPhone = phoneRegex.test(text);
+      const hasProfile = cleanText.includes('linkedin.com') || cleanText.includes('github.com') || cleanText.includes('portfolio');
+      const hasContact = hasEmail || hasPhone || hasProfile;
+
+      // Reject textbooks or theory lecture notes (e.g. DBMS Theory, OS Theory)
+      if (matchedTheory >= 2 && !hasContact) {
         return {
-          isValid: true,
-          matchedCategories,
-          totalKeywordMatches,
-          categoryBreakdown
+          isValid: false,
+          reason: 'Document contains academic textbook / lecture notes (e.g. DBMS / Course Theory) without candidate credentials.'
+        };
+      }
+
+      // Authentic student resumes MUST have contact info
+      if (!hasContact) {
+        return {
+          isValid: false,
+          reason: 'Missing candidate contact information (no email address, phone number, or professional profile detected).'
+        };
+      }
+
+      // 6. Educational Qualifications & Degree
+      const educationKeywords = [
+        'education', 'b.tech', 'btech', 'b.e', 'bachelor', 'master', 'm.tech', 'mtech',
+        'cgpa', 'gpa', 'percentage', 'university', 'college', 'institute', 'school',
+        'academics', 'academic', 'degree'
+      ];
+      const educationMatches = educationKeywords.filter(kw => cleanText.includes(kw)).length;
+      if (educationMatches === 0) {
+        return {
+          isValid: false,
+          reason: 'No educational qualification or degree (e.g. B.Tech, CGPA, College, University) detected.'
+        };
+      }
+
+      // 7. Technical Skills & Projects/Experience
+      const skillsKeywords = [
+        'skill', 'skills', 'technical skills', 'programming', 'languages', 'frameworks',
+        'technologies', 'tools', 'java', 'python', 'javascript', 'typescript', 'c++',
+        'c#', 'react', 'node', 'express', 'sql', 'mysql', 'postgresql', 'mongodb',
+        'docker', 'aws', 'cloud', 'git', 'github', 'html', 'css', 'data structures',
+        'algorithms', 'spring', 'django', 'fastapi', 'devops', 'machine learning'
+      ];
+      const projectKeywords = [
+        'experience', 'internship', 'intern', 'project', 'projects', 'work experience',
+        'responsibilities', 'contributions', 'developed', 'implemented', 'designed',
+        'built', 'worked on', 'spearheaded', 'collaborated'
+      ];
+      const skillsMatches = skillsKeywords.filter(kw => cleanText.includes(kw)).length;
+      const projectMatches = projectKeywords.filter(kw => cleanText.includes(kw)).length;
+
+      if (skillsMatches < 2 && projectMatches < 1) {
+        return {
+          isValid: false,
+          reason: 'Document lacks sufficient technical skills and project/internship sections.'
         };
       }
 
       return {
-        isValid: false,
-        reason: 'Missing required sections such as Education, Technical Skills, and Projects/Experience.'
+        isValid: true,
+        matchedCategories: 4,
+        totalKeywordMatches: educationMatches + skillsMatches + projectMatches
       };
     }
 
@@ -3640,6 +3630,7 @@ class LRUCache<K, V> {
         currentResumeText = '';
         currentFileName = '';
         currentParsedStats = null;
+        lastAiAnalysis = null;
 
         const displayFilename = document.getElementById('display-filename');
         if (displayFilename) displayFilename.innerText = `Rejected: ${file.name}`;
@@ -3826,16 +3817,20 @@ class LRUCache<K, V> {
 
         const data = await response.json();
 
-        // Check if server rejected as non-resume
-        if (data.isNotResume || (data.error && data.error.includes('not a resume'))) {
-          showToast(`❌ ${data.error || 'The uploaded document is not a resume.'}`, 7000);
+        // Check if server rejected as non-resume or error
+        if (!response.ok || data.isNotResume || (data.error && data.error.includes('not a resume'))) {
+          showToast(`❌ ${data.error || 'The uploaded document is not a resume or is an invalid document.'}`, 7000);
           const alertBanner = document.getElementById('resume-validation-alert');
           const alertText = document.getElementById('resume-validation-alert-text');
           if (alertBanner && alertText) {
-            alertText.innerHTML = `<strong>Document Rejected:</strong> ${data.error || 'The uploaded document is not a resume.'}`;
+            alertText.innerHTML = `<strong>Document Rejected:</strong> ${data.error || 'The uploaded document is not a resume or is an invalid document.'}`;
             alertBanner.classList.remove('hidden');
           }
+          currentResumeText = '';
+          currentFileName = '';
+          lastAiAnalysis = null;
           isAiAnalyzing = false;
+          analysisSucceeded = false;
           showStep(2);
           return;
         }
@@ -3862,14 +3857,13 @@ class LRUCache<K, V> {
           applyLiveAnalysisToUi(data);
           showToast(`✓ Saved to Supabase PostgreSQL Record #${data.dbRecordId}!`);
         } else {
-          analysisSucceeded = true;
-          renderTailoredSkills();
+          showToast(`❌ Error: ${data.error || 'AI analysis failed.'}`, 6000);
+          analysisSucceeded = false;
         }
       } catch (err) {
         console.warn('[AI Pipeline Error]', err);
-        analysisSucceeded = true;
-        renderTailoredSkills();
-        showToast('Generated analysis with local rule engine.');
+        showToast('❌ Analysis failed: Network or server error. Please retry.', 6000);
+        analysisSucceeded = false;
       } finally {
         isAiAnalyzing = false;
         if (analysisSucceeded) {
