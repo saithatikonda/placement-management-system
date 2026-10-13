@@ -351,16 +351,16 @@ async function handleApiRequest(req, res) {
       const theoryMarkers = ['chapter', 'unit 1', 'module 1', 'normalization', 'acid properties', 'definition:', 'er diagram', 'relational algebra', 'table of contents'];
       const matchedTheory = theoryMarkers.filter(k => lower.includes(k)).length;
 
-      const hasEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(resumeText);
-      const hasPhone = /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\b[6-9]\d{9}\b/.test(resumeText);
-      const hasContact = hasEmail || hasPhone || lower.includes('linkedin.com') || lower.includes('github.com');
+      const hasEmail = /[a-zA-Z0-9._%+-]+\s*@\s*[a-zA-Z0-9.-]+\s*\.[a-zA-Z]{2,}/i.test(resumeText) || lower.includes('@');
+      const hasPhone = /(?:\+?\d{1,4}[-.\s]*)?\(?\d{2,4}\)?[-.\s]*\d{3,4}[-.\s]*\d{3,4}|\b\d{10}\b|\b[6-9]\d{9}\b/.test(resumeText.replace(/[\s-]/g, '')) || /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/.test(resumeText);
+      const hasContact = hasEmail || hasPhone || lower.includes('linkedin') || lower.includes('github') || lower.includes('portfolio') || lower.includes('contact') || lower.includes('email') || lower.includes('phone') || lower.includes('mobile');
 
       const nonResumeTerms = ['invoice', 'tax invoice', 'bill of supply', 'receipt voucher', 'payment receipt', 'electricity bill', 'water bill', 'rent agreement'];
       const hasNonResumeMarker = nonResumeTerms.some(term => lower.includes(term));
       const resumeKeywords = ['education', 'skills', 'experience', 'projects', 'b.tech', 'degree', 'cgpa', 'university', 'curriculum', 'internship', 'languages', 'developer'];
       const matchedCount = resumeKeywords.filter(k => lower.includes(k)).length;
 
-      if (isTooShort || isNonResumeName || (matchedTheory >= 2 && !hasContact) || (hasNonResumeMarker && matchedCount < 3) || !hasContact) {
+      if (isTooShort || isNonResumeName || (matchedTheory >= 2 && !hasContact) || hasNonResumeMarker || (matchedCount === 0 && !hasContact)) {
         res.statusCode = 422;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({
