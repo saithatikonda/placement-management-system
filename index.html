@@ -2501,8 +2501,6 @@ class LRUCache<K, V> {
       }
     };
 
-    let autoTransitionTimer = null;
-
     function showStep(step) {
       if (autoTransitionTimer) {
         clearTimeout(autoTransitionTimer);
