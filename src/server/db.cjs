@@ -339,8 +339,49 @@ async function getKpiMetrics() {
 }
 
 async function clearAllData() {
-  await pool.query('TRUNCATE TABLE public.candidates, public.applications, public.resumes, public.job_drives, public.students, public.kpi_metrics RESTART IDENTITY;');
-  return { success: true, message: 'All mock and stored records cleared from database.' };
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      TRUNCATE TABLE 
+        public.resumes, 
+        public.applications, 
+        public.candidates, 
+        public.students, 
+        public.job_drives, 
+        public.kpi_metrics, 
+        public.auth_users 
+      RESTART IDENTITY CASCADE;
+    `);
+
+    // Reseed Fresh Campus Recruitment Drives
+    await client.query(`
+      INSERT INTO public.job_drives (id, company, code, role, ctc, ctc_numeric, min_cgpa, eligible_branches, drive_date, status, location, jd_summary) VALUES
+      ('drive-amz-01', 'Amazon AWS', 'AMZ', 'SDE-1 (Distributed Systems)', '32.0 LPA', 32.0, 8.0, '["CSE", "IT"]'::jsonb, 'Oct 18, 2026', 'Active Registration', 'Bengaluru / Hyderabad', 'High-throughput cloud distributed storage and event architectures in Java/Go.'),
+      ('drive-ora-01', 'Oracle Cloud', 'ORA', 'Member of Technical Staff', '18.0 LPA', 18.0, 7.5, '["CSE", "IT", "ECE"]'::jsonb, 'Oct 22, 2026', 'Active Registration', 'Bengaluru', 'OCI core virtual networking, telemetry pipelines and multi-tenant cloud infra.'),
+      ('drive-str-01', 'Stripe India', 'STR', 'Backend Infrastructure Engineer', '34.5 LPA', 34.5, 8.5, '["CSE", "IT"]'::jsonb, 'Nov 02, 2026', 'Active Registration', 'Bengaluru / Remote', 'Global payment transaction settlement engines, ledger reliability, and Kafka pipelines.'),
+      ('drive-goo-01', 'Google India', 'GOO', 'Associate AI Research Engineer', '42.0 LPA', 42.0, 8.5, '["CSE", "IT"]'::jsonb, 'Oct 25, 2026', 'Active Registration', 'Bengaluru / Hyderabad', 'Transformer model optimization, multimodal RAG systems, and TPU acceleration.'),
+      ('drive-msft-01', 'Microsoft IDC', 'MSFT', 'Applied AI / LLM Scientist', '38.0 LPA', 38.0, 8.0, '["CSE", "IT", "ECE"]'::jsonb, 'Oct 29, 2026', 'Active Registration', 'Hyderabad / Noida', 'Generative AI copilot integrations, model fine-tuning and Azure cognitive services.'),
+      ('drive-cisc-01', 'Cisco Systems', 'CIS', 'Full-Stack Software Engineer', '19.5 LPA', 19.5, 7.0, '["CSE", "IT", "ECE"]'::jsonb, 'Nov 04, 2026', 'Active Registration', 'Bengaluru', 'Cloud enterprise monitoring portals, React 19, TypeScript and resilient microservices.');
+    `);
+
+    // Reseed Fresh KPI Metrics
+    await client.query(`
+      INSERT INTO public.kpi_metrics (id, total_eligible, enrolled_students, placed_students, placement_rate, companies_visited, highest_ctc, average_ctc, median_ctc, super_dream_count)
+      VALUES (1, 850, 1024, 612, 72.0, 48, 44.0, 9.2, 8.4, 42);
+    `);
+
+    // Reseed Fresh Default Auth Users
+    await client.query(`
+      INSERT INTO public.auth_users (identifier, email, name, phone, password, role) VALUES
+      ('22bcse104', 'sai@univ.edu.in', 'Sai Vardhan', '+91 98765 43210', 'DemoPass2026!', 'student'),
+      ('tpo-admin', 'tpo@univ.edu.in', 'Placement Officer Dr. Sharma', '+91 98765 00000', 'AdminPass2026!', 'tpo'),
+      ('company-hr', 'recruiter@techcorp.com', 'Campus Recruiter', '+91 98765 11111', 'CompanyPass2026!', 'company');
+    `);
+
+    return { success: true, message: 'All database records wiped cleanly and reset to fresh seed state.' };
+  } finally {
+    client.release();
+  }
 }
 
 async function registerUser({ identifier, email, name, phone = '', password, role = 'student' }) {
