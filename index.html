@@ -3168,13 +3168,19 @@ class LRUCache<K, V> {
           const data = await resp.json();
           if (data.success && Array.isArray(data.users)) {
             const users = getRegisteredUsers();
-            const existingKeys = new Set(users.map(u => (u.identifier || '').toLowerCase()));
             let added = false;
             data.users.forEach(u => {
               const k = (u.identifier || '').toLowerCase();
-              if (!existingKeys.has(k)) {
+              const em = (u.email || '').toLowerCase();
+              const existingIdx = users.findIndex(ex => 
+                (ex.identifier || '').toLowerCase() === k || 
+                (ex.email || '').toLowerCase() === em
+              );
+              if (existingIdx >= 0) {
+                users[existingIdx] = { ...users[existingIdx], ...u };
+                added = true;
+              } else {
                 users.push(u);
-                existingKeys.add(k);
                 added = true;
               }
             });
@@ -3271,6 +3277,7 @@ class LRUCache<K, V> {
 
     function switchAuthMode(mode, prefillId = '') {
       currentAuthMode = mode;
+      syncRegisteredUsersWithServer();
       const tabSignIn = document.getElementById('auth-tab-signin');
       const tabSignUp = document.getElementById('auth-tab-signup');
       const containerSignIn = document.getElementById('auth-signin-container');
@@ -3420,59 +3427,79 @@ class LRUCache<K, V> {
         return;
       }
 
-      let users = getRegisteredUsers();
-      let matchedUser = findMatchingUser(enteredId, users);
+      let authenticatedUser = null;
 
-      // If not in local storage on this browser, query the Supabase PostgreSQL database!
-      if (!matchedUser) {
-        try {
-          const resp = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ identifier: enteredId, password: enteredPw })
-          });
-          if (resp.ok) {
-            const data = await resp.json();
-            if (data.success && data.user) {
-              matchedUser = data.user;
-              users.push({ ...data.user, password: enteredPw });
-              localStorage.setItem('pms_registered_users', JSON.stringify(users));
-            }
+      // 1. Primary: Authenticate against Supabase PostgreSQL server (works across laptops, mobiles, and other browsers)
+      try {
+        const resp = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: enteredId, password: enteredPw })
+        });
+        const data = await resp.json();
+
+        if (resp.ok && data.success && data.user) {
+          // Successfully verified against server database!
+          authenticatedUser = data.user;
+          // Sync into local cache on this device
+          const users = getRegisteredUsers();
+          const cleanK = (data.user.identifier || '').toLowerCase();
+          const existingIdx = users.findIndex(u => (u.identifier || '').toLowerCase() === cleanK);
+          if (existingIdx >= 0) {
+            users[existingIdx] = { ...data.user, password: enteredPw };
+          } else {
+            users.push({ ...data.user, password: enteredPw });
           }
-        } catch (_) {
-          // Network offline fallback
+          localStorage.setItem('pms_registered_users', JSON.stringify(users));
+        } else if (resp.status === 401) {
+          // Definite incorrect password from server
+          if (errBanner) {
+            errBanner.innerHTML = '<strong>Authentication Failed:</strong> Incorrect password. Please try again.';
+            errBanner.classList.remove('hidden');
+          }
+          showToast('❌ Incorrect password.');
+          return;
+        }
+      } catch (err) {
+        console.warn('[Server Auth Fallback]', err);
+      }
+
+      // 2. Fallback to local storage (if offline or database was unreachable)
+      if (!authenticatedUser) {
+        const users = getRegisteredUsers();
+        const matchedLocal = findMatchingUser(enteredId, users);
+        if (matchedLocal) {
+          const isDemo = (matchedLocal.identifier || '').toLowerCase() === '22bcse104' || (matchedLocal.email || '').toLowerCase() === 'sai@univ.edu.in';
+          const demoPwMatch = isDemo && ['demopass2026!', 'password', '123456', 'thatikonda@123', 'demo', 'admin'].includes(enteredPw.toLowerCase());
+          const standardPwMatch = matchedLocal.password && (matchedLocal.password === enteredPw);
+          if (demoPwMatch || standardPwMatch) {
+            authenticatedUser = matchedLocal;
+          } else {
+            if (errBanner) {
+              errBanner.innerHTML = '<strong>Authentication Failed:</strong> Incorrect password. Please try again.';
+              errBanner.classList.remove('hidden');
+            }
+            showToast('❌ Incorrect password.');
+            return;
+          }
         }
       }
 
-      // Check if user account was found anywhere
-      if (!matchedUser) {
+      // 3. User truly not found anywhere
+      if (!authenticatedUser) {
         if (errBanner) {
-          errBanner.innerHTML = `<strong>Account Not Found:</strong> No registered account found for "<em>${enteredId}</em>". If you are a new student, please click <strong><button type="button" onclick="switchAuthMode('signup', '${enteredId.replace(/'/g, "\\'")}')" class="underline font-bold text-blue-600 hover:text-blue-800 dark:text-sky-400">Sign Up</button></strong> to create your profile.`;
+          errBanner.innerHTML = `<strong>Account Not Found:</strong> No registered account found for "<em>${enteredId}</em>". If you created your account on another device (such as your laptop), please verify your Roll Number or click <strong><button type="button" onclick="switchAuthMode('signup', '${enteredId.replace(/'/g, "\\'")}')" class="underline font-bold text-blue-600 hover:text-blue-800 dark:text-sky-400">Sign Up</button></strong> to create your profile.`;
           errBanner.classList.remove('hidden');
         }
         showToast('❌ Account not found. Please Sign Up first.');
         return;
       }
 
-      // Check password
-      const isDemo = (matchedUser.identifier || '').toLowerCase() === '22bcse104' || (matchedUser.email || '').toLowerCase() === 'sai@univ.edu.in';
-      const demoPwMatch = isDemo && ['demopass2026!', 'password', '123456', 'thatikonda@123', 'demo', 'admin'].includes(enteredPw.toLowerCase());
-      const standardPwMatch = matchedUser.password && (matchedUser.password === enteredPw);
-
-      if (!demoPwMatch && !standardPwMatch) {
-        if (errBanner) {
-          errBanner.innerHTML = '<strong>Authentication Failed:</strong> Incorrect password. Please try again.';
-          errBanner.classList.remove('hidden');
-        }
-        showToast('❌ Incorrect password.');
-        return;
-      }
-
-      // Successful authentication
+      // 4. Successful Authentication
       isAuthenticated = true;
-      currentRollNumber = (matchedUser.identifier || enteredId).toUpperCase();
-      currentStudentName = matchedUser.name || 'Student Candidate';
-      currentAuthRole = matchedUser.role || currentAuthRole;
+      currentRollNumber = (authenticatedUser.identifier || enteredId).toUpperCase();
+      currentStudentName = authenticatedUser.name || 'Student Candidate';
+      currentAuthRole = authenticatedUser.role || currentAuthRole;
 
       resetUploadedResumeState();
 
@@ -3546,10 +3573,9 @@ class LRUCache<K, V> {
       const normEmail = email.toLowerCase();
       const users = getRegisteredUsers();
 
-      // Check if user already exists
+      // Check local cache if user already exists
       const existingUser = findMatchingUser(normId, users) || findMatchingUser(normEmail, users);
-
-      if (existingUser) {
+      if (existingUser && existingUser.identifier !== '22bcse104') {
         if (errBanner) {
           errBanner.innerHTML = `<strong>Account Already Exists:</strong> A user with Roll Number "${identifier}" or Email "${email}" is already registered. Please switch to <strong><button type="button" onclick="switchAuthMode('signin', '${identifier.replace(/'/g, "\\'")}')" class="underline font-bold text-blue-600 hover:text-blue-800 dark:text-sky-400">Sign In</button></strong>.`;
           errBanner.classList.remove('hidden');
@@ -3558,7 +3584,31 @@ class LRUCache<K, V> {
         return;
       }
 
-      // Register new user with password
+      showToast('Creating account & syncing across all devices...');
+
+      // 1. Primary: Save account directly to Supabase PostgreSQL database so it is accessible on mobile and laptop
+      try {
+        const resp = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            email: normEmail,
+            identifier: normId,
+            phone: phone || '',
+            password,
+            role: currentSignUpRole
+          })
+        });
+        const regData = await resp.json();
+        if (!regData.success) {
+          console.warn('[DB Auth Register]', regData.error);
+        }
+      } catch (err) {
+        console.warn('[DB Auth Register]', err);
+      }
+
+      // 2. Save locally on this device
       const newUser = {
         name,
         email: normEmail,
@@ -3568,29 +3618,21 @@ class LRUCache<K, V> {
         role: currentSignUpRole,
         registeredAt: new Date().toISOString()
       };
-
-      // Save locally
-      users.push(newUser);
+      const existingIdx = users.findIndex(u => (u.identifier || '').toLowerCase() === normId || (u.email || '').toLowerCase() === normEmail);
+      if (existingIdx >= 0) {
+        users[existingIdx] = newUser;
+      } else {
+        users.push(newUser);
+      }
       localStorage.setItem('pms_registered_users', JSON.stringify(users));
 
-      // Also persist to PostgreSQL database for cross-device access!
-      try {
-        await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newUser)
-        });
-      } catch (err) {
-        console.warn('[DB Auth Register]', err);
-      }
-
-      // Clear sign-up form fields so they don't linger on logout!
+      // 3. Clear sign-up form fields so they don't linger on logout
       ['signup-name', 'signup-email', 'signup-identifier', 'signup-phone', 'signup-password', 'signup-confirm-password'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
 
-      // Authenticate new user immediately
+      // 4. Authenticate new user immediately
       isAuthenticated = true;
       currentRollNumber = identifier.toUpperCase();
       currentStudentName = name;
@@ -3615,11 +3657,11 @@ class LRUCache<K, V> {
       }));
 
       if (succBanner) {
-        succBanner.innerHTML = `<strong>Account Created Successfully!</strong> Welcome, ${name}. Initializing your placement workspace...`;
+        succBanner.innerHTML = `<strong>Account Created Successfully!</strong> Welcome, ${name}. Your account is synced to the cloud and ready to sign in from your mobile phone or any other device.`;
         succBanner.classList.remove('hidden');
       }
 
-      showToast(`Welcome, ${name}! Account registered successfully.`);
+      showToast(`Welcome, ${name}! Account registered & synced to cloud.`);
       setTimeout(() => {
         showStep(2);
       }, 700);

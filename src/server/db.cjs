@@ -387,19 +387,38 @@ async function clearAllData() {
 async function registerUser({ identifier, email, name, phone = '', password, role = 'student' }) {
   const normId = (identifier || '').trim().toLowerCase();
   const normEmail = (email || '').trim().toLowerCase();
-  const query = `
+  const cleanPhone = (phone || '').trim();
+
+  // 1. Check if user already exists by identifier or email
+  const existingRes = await pool.query(`
+    SELECT id FROM public.auth_users 
+    WHERE LOWER(identifier) = $1 OR LOWER(email) = $2
+    LIMIT 1;
+  `, [normId, normEmail]);
+
+  if (existingRes.rows.length > 0) {
+    const existingId = existingRes.rows[0].id;
+    const updateRes = await pool.query(`
+      UPDATE public.auth_users SET
+        identifier = $1,
+        email = $2,
+        name = $3,
+        phone = $4,
+        password = $5,
+        role = $6
+      WHERE id = $7
+      RETURNING id, identifier, email, name, phone, role, created_at;
+    `, [normId, normEmail, name, cleanPhone, password, role, existingId]);
+    return updateRes.rows[0];
+  }
+
+  // 2. Insert fresh user
+  const insertRes = await pool.query(`
     INSERT INTO public.auth_users (identifier, email, name, phone, password, role)
     VALUES ($1, $2, $3, $4, $5, $6)
-    ON CONFLICT (identifier) DO UPDATE SET
-      email = EXCLUDED.email,
-      name = EXCLUDED.name,
-      phone = EXCLUDED.phone,
-      password = EXCLUDED.password,
-      role = EXCLUDED.role
     RETURNING id, identifier, email, name, phone, role, created_at;
-  `;
-  const res = await pool.query(query, [normId, normEmail, name, phone, password, role]);
-  return res.rows[0];
+  `, [normId, normEmail, name, cleanPhone, password, role]);
+  return insertRes.rows[0];
 }
 
 async function getRegisteredUsersFromDb() {
@@ -413,8 +432,11 @@ async function getRegisteredUsersFromDb() {
 }
 
 async function findUserByCredentials(queryStr) {
+  if (!queryStr) return null;
   const norm = (queryStr || '').trim().toLowerCase();
   const cleanNorm = norm.replace(/[^a-z0-9]/g, '');
+  const phoneDigits = norm.replace(/[^0-9]/g, '');
+
   try {
     const res = await pool.query(`
       SELECT id, identifier, email, name, phone, password, role, created_at 
@@ -422,10 +444,10 @@ async function findUserByCredentials(queryStr) {
       WHERE LOWER(identifier) = $1 
          OR LOWER(email) = $1 
          OR LOWER(name) = $1
-         OR regexp_replace(LOWER(identifier), '[^a-z0-9]', '', 'g') = $2
-         OR regexp_replace(phone, '[^0-9]', '', 'g') = $2
+         OR ($2 <> '' AND regexp_replace(LOWER(identifier), '[^a-z0-9]', '', 'g') = $2)
+         OR ($3 <> '' AND length($3) >= 7 AND regexp_replace(phone, '[^0-9]', '', 'g') LIKE '%' || $3 || '%')
       LIMIT 1;
-    `, [norm, cleanNorm]);
+    `, [norm, cleanNorm, phoneDigits]);
     return res.rows[0] || null;
   } catch (err) {
     console.warn('[DB] findUserByCredentials error:', err.message);
