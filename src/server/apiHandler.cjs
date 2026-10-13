@@ -262,6 +262,26 @@ async function handleApiRequest(req, res) {
         cgpa = 8.5
       } = body;
 
+      // Strict Server-Side Resume Verification
+      const lower = (resumeText || '').toLowerCase();
+      const words = lower.split(/\s+/).filter(w => w.length > 1);
+      const isTooShort = words.length < 25;
+      const nonResumeTerms = ['invoice', 'tax invoice', 'bill of supply', 'receipt voucher', 'payment receipt', 'electricity bill', 'water bill', 'rent agreement'];
+      const hasNonResumeMarker = nonResumeTerms.some(term => lower.includes(term));
+      const resumeKeywords = ['education', 'skills', 'experience', 'projects', 'b.tech', 'degree', 'cgpa', 'university', 'curriculum', 'internship', 'languages', 'developer'];
+      const matchedCount = resumeKeywords.filter(k => lower.includes(k)).length;
+
+      if (isTooShort || (hasNonResumeMarker && matchedCount < 3) || matchedCount < 2) {
+        res.statusCode = 422;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({
+          success: false,
+          isNotResume: true,
+          error: 'The uploaded document does not appear to be a resume. Please upload a valid resume containing your education, skills, and projects.'
+        }));
+        return true;
+      }
+
       console.log(`[API] Analyzing resume for ${rollNumber} (Dream Job: ${dreamJob})...`);
 
       // Call Groq AI

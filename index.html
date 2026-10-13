@@ -382,6 +382,67 @@
       border-color: #DFDFF0 !important;
       box-shadow: 0 0 0 2px rgba(136, 141, 187, 0.4) !important;
     }
+
+    /* ==========================================================================
+       COMPACT STICKY HEADER ON SCROLL (MOBILE & DESKTOP)
+       ========================================================================== */
+    header#main-header {
+      transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                  margin 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    header#main-header.header-compact {
+      padding-top: 0.35rem !important;
+      padding-bottom: 0.35rem !important;
+      margin-bottom: 0.5rem !important;
+      box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.16) !important;
+    }
+    header#main-header.header-compact #main-header-logo {
+      width: 1.75rem !important;
+      height: 1.75rem !important;
+      border-radius: 0.5rem !important;
+    }
+    header#main-header.header-compact #main-header-subtitle {
+      display: none !important;
+    }
+    header#main-header.header-compact #portal-version-badge {
+      display: none !important;
+    }
+    header#main-header.header-compact #header-mobile-stepper-wrap {
+      margin-top: 0.25rem !important;
+      padding-top: 0.25rem !important;
+    }
+    header#main-header.header-compact #flow-stepper-mobile {
+      padding: 0.1rem 0.25rem !important;
+      gap: 0.15rem !important;
+    }
+    header#main-header.header-compact #flow-stepper-mobile .ios-seg-btn {
+      padding: 0.2rem 0.45rem !important;
+      font-size: 0.68rem !important;
+      line-height: 1.1 !important;
+    }
+    header#main-header.header-compact #flow-stepper-mobile span {
+      font-size: 0.55rem !important;
+      padding-left: 0.1rem !important;
+      padding-right: 0.1rem !important;
+    }
+    header#main-header.header-compact #post-selection-nav {
+      margin-top: 0.25rem !important;
+      padding-top: 0.25rem !important;
+    }
+    header#main-header.header-compact #post-selection-nav .ios-seg-btn {
+      padding: 0.2rem 0.45rem !important;
+      font-size: 0.68rem !important;
+    }
+    header#main-header.header-compact #themeToggleBtn,
+    header#main-header.header-compact #btn-back,
+    header#main-header.header-compact #btn-logout {
+      padding-top: 0.25rem !important;
+      padding-bottom: 0.25rem !important;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+      font-size: 0.72rem !important;
+    }
   </style>
 </head>
 <body class="p-3 sm:p-6 min-h-screen flex flex-col">
@@ -389,20 +450,20 @@
   <!-- ==========================================================================
        TOP NAVIGATION BAR WITH APPLE AESTHETICS & LIVE THEME TOGGLE
        ========================================================================== -->
-  <header class="apple-card mb-5 sm:mb-6 px-4 sm:px-6 py-3.5 sticky top-2 sm:top-3 z-40">
+  <header id="main-header" class="apple-card mb-5 sm:mb-6 px-4 sm:px-6 py-3.5 sticky top-2 sm:top-3 z-40 transition-all duration-300">
     <!-- Top Row: App Title (Left), Desktop Stepper (Center), Action Buttons (Right) -->
     <div class="flex items-center justify-between gap-3 sm:gap-4 flex-wrap md:flex-nowrap">
       <!-- Left: Logo & Portal Title -->
       <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-md shadow-blue-500/20 shrink-0 ring-1 ring-white/30">
+        <div id="main-header-logo" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-md shadow-blue-500/20 shrink-0 ring-1 ring-white/30 transition-all duration-300">
           <img src="/login-icon.png" alt="Portal Logo" class="w-full h-full object-cover" />
         </div>
         <div>
           <div class="flex items-center gap-1.5">
-            <span class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">Campus Placement Portal</span>
-            <span class="px-1.5 py-0.2 rounded-full text-[9px] sm:text-[10px] font-semibold bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800" id="portal-version-badge">iOS Pro v2.4</span>
+            <span id="main-header-title" class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 transition-all">Campus Placement Portal</span>
+            <span class="px-1.5 py-0.2 rounded-full text-[9px] sm:text-[10px] font-semibold bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 transition-all" id="portal-version-badge">iOS Pro v2.4</span>
           </div>
-          <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight">Student Intelligence & Career Suite</div>
+          <div id="main-header-subtitle" class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 leading-tight transition-all">Student Intelligence & Career Suite</div>
         </div>
       </div>
 
@@ -449,7 +510,7 @@
     </div>
 
     <!-- Mobile Stepper Row (Visible only on screens below md breakpoint) -->
-    <div class="md:hidden mt-3 pt-2.5 border-t border-black/[0.05] dark:border-white/[0.08] flex items-center justify-center">
+    <div id="header-mobile-stepper-wrap" class="md:hidden mt-3 pt-2.5 border-t border-black/[0.05] dark:border-white/[0.08] flex items-center justify-center transition-all duration-300">
       <div id="flow-stepper-mobile" class="ios-segmented flex items-center gap-1 text-xs py-1 px-1.5 overflow-x-auto max-w-full">
         <button onclick="showStep(1)" id="step-nav-mobile-1" class="ios-seg-btn active">
           1. Login
@@ -694,6 +755,12 @@
             <span id="pdf-parsed-stats">0 chars</span>
           </span>
         </div>
+      </div>
+
+      <!-- Non-Resume Warning Alert Banner -->
+      <div id="resume-validation-alert" class="hidden mb-5 p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs sm:text-sm font-medium shadow-sm flex items-start gap-3">
+        <svg class="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <div id="resume-validation-alert-text">The uploaded document is not a resume.</div>
       </div>
 
       <!-- Resume Health Card (Apple White Surface with Emerald ATS Badge) -->
@@ -2479,6 +2546,31 @@ class LRUCache<K, V> {
         autoTransitionTimer = null;
       }
 
+      // 1. Strict Authentication Gate: User cannot navigate to steps 2, 3, 4 without logging in
+      if (step > 1 && !isAuthenticated) {
+        showToast('🔒 Access Restricted: Please Sign In or Create an Account first.');
+        const errBanner = document.getElementById('auth-error-banner');
+        if (errBanner) {
+          errBanner.innerHTML = '<strong>Access Restricted:</strong> You must <strong>Sign In</strong> or <strong>Sign Up</strong> first before accessing the placement suite.';
+          errBanner.classList.remove('hidden');
+        }
+        step = 1;
+      }
+
+      // 2. Strict Resume Gate: User cannot navigate to step 3 or 4 without a verified resume
+      if (step >= 3 && !lastAiAnalysis) {
+        const isResumeValid = currentResumeText && validateResumeDocument(currentResumeText, currentFileName).isValid;
+        if (!isResumeValid) {
+          showToast('⚠️ Please upload and validate your resume PDF in Step 2 before proceeding.');
+          const resumeAlert = document.getElementById('resume-validation-alert');
+          if (resumeAlert) {
+            resumeAlert.innerHTML = '<strong>⚠️ Resume Required:</strong> Please upload a valid resume PDF with your education, skills, and projects to proceed to AI Scanner & Matched Roles.';
+            resumeAlert.classList.remove('hidden');
+          }
+          step = 2;
+        }
+      }
+
       currentStep = step;
 
       // 1. Manage visibility for all 7 screens
@@ -2493,17 +2585,33 @@ class LRUCache<K, V> {
         }
       }
 
-      // 2. Manage 4-step stepper pills (both desktop and mobile)
+      // 2. Manage 4-step stepper pills (both desktop and mobile) with auth lock styling
       for (let i = 1; i <= 4; i++) {
         const navEl = document.getElementById('step-nav-' + i);
         const navMobEl = document.getElementById('step-nav-mobile-' + i);
         if (navEl) {
           if (i === step) navEl.classList.add('active');
           else navEl.classList.remove('active');
+
+          if (!isAuthenticated && i > 1) {
+            navEl.classList.add('opacity-50');
+            navEl.title = '🔒 Sign in required';
+          } else {
+            navEl.classList.remove('opacity-50');
+            navEl.removeAttribute('title');
+          }
         }
         if (navMobEl) {
           if (i === step) navMobEl.classList.add('active');
           else navMobEl.classList.remove('active');
+
+          if (!isAuthenticated && i > 1) {
+            navMobEl.classList.add('opacity-50');
+            navMobEl.title = '🔒 Sign in required';
+          } else {
+            navMobEl.classList.remove('opacity-50');
+            navMobEl.removeAttribute('title');
+          }
         }
       }
 
@@ -2518,8 +2626,8 @@ class LRUCache<K, V> {
       const btnBack = document.getElementById('btn-back');
       const postSelectionNav = document.getElementById('post-selection-nav');
 
-      if (step === 1) {
-        // Step 1: Login - Strictly hide Logout, Back, and Workstation Nav
+      if (step === 1 || !isAuthenticated) {
+        // Step 1 or Unauthenticated: Strictly hide Logout, Back, and Workstation Nav
         if (btnLogout) btnLogout.classList.add('hidden');
         if (btnBack) btnBack.classList.add('hidden');
         if (postSelectionNav) postSelectionNav.classList.add('hidden');
@@ -2547,6 +2655,13 @@ class LRUCache<K, V> {
       if (autoTransitionTimer) {
         clearTimeout(autoTransitionTimer);
         autoTransitionTimer = null;
+      }
+
+      // Strict Authentication Gate for Post-Placement Sections
+      if (!isAuthenticated) {
+        showToast('🔒 Access Restricted: Please Sign In first.');
+        showStep(1);
+        return;
       }
 
       // Hide all screens
@@ -2596,6 +2711,11 @@ class LRUCache<K, V> {
     }
 
     function goBack() {
+      if (!isAuthenticated) {
+        showStep(1);
+        return;
+      }
+
       // If currently on one of the dedicated sections (5, 6, 7), go back to Matched Roles (Step 4)
       const isSec5 = !document.getElementById('screen-5')?.classList.contains('step-hidden');
       const isSec6 = !document.getElementById('screen-6')?.classList.contains('step-hidden');
@@ -2758,6 +2878,7 @@ class LRUCache<K, V> {
     }
 
     // Identity & Session State
+    let isAuthenticated = false;
     let currentStudentName = '';
     let currentRollNumber = '';
 
@@ -2768,12 +2889,108 @@ class LRUCache<K, V> {
     let lastAiAnalysis = null;
     let isAiAnalyzing = false;
 
+    // Intelligent Resume Document Validator
+    function validateResumeDocument(text, fileName = '') {
+      if (!text || typeof text !== 'string') {
+        return {
+          isValid: false,
+          reason: 'No readable text content detected in document.'
+        };
+      }
+
+      const cleanText = text.toLowerCase();
+      const words = cleanText.split(/\s+/).filter(w => w.length > 1);
+
+      // Brief documents (< 25 words) cannot be a complete student resume
+      if (words.length < 25) {
+        return {
+          isValid: false,
+          reason: 'Document text is too brief (less than 25 words detected).'
+        };
+      }
+
+      // Strong non-resume markers (bills, invoices, receipts, legal notices, tickets)
+      const nonResumeMarkers = [
+        'invoice', 'tax invoice', 'bill of supply', 'receipt voucher', 'payment receipt',
+        'electricity bill', 'water bill', 'telephone bill', 'rent agreement', 'bank statement',
+        'boarding pass', 'booking confirmation', 'prescription', 'order summary', 'shipping label',
+        'proforma invoice', 'cash memo', 'toll receipt'
+      ];
+      const hasNonResumeMarker = nonResumeMarkers.some(marker => cleanText.includes(marker));
+
+      // Standard resume categories & technical vocabulary
+      const resumeCategories = {
+        education: [
+          'education', 'b.tech', 'btech', 'b.e', 'bachelor', 'master', 'm.tech', 'mtech',
+          'cgpa', 'gpa', 'percentage', 'university', 'college', 'institute', 'school',
+          'curriculum', 'academics', 'academic', 'degree'
+        ],
+        skills: [
+          'skill', 'skills', 'technical skills', 'programming', 'languages', 'frameworks',
+          'technologies', 'tools', 'java', 'python', 'javascript', 'typescript', 'c++',
+          'c#', 'react', 'node', 'express', 'sql', 'mysql', 'postgresql', 'mongodb',
+          'docker', 'aws', 'cloud', 'git', 'github', 'html', 'css', 'data structures',
+          'algorithms', 'spring', 'django', 'fastapi', 'devops', 'machine learning'
+        ],
+        experienceOrProjects: [
+          'experience', 'internship', 'intern', 'project', 'projects', 'work experience',
+          'employment', 'responsibilities', 'contributions', 'developed', 'implemented',
+          'designed', 'built', 'worked on', 'spearheaded', 'collaborated'
+        ],
+        contactOrDossier: [
+          'resume', 'curriculum vitae', 'cv', 'email', 'phone', 'mobile', 'linkedin',
+          'github', 'portfolio', 'summary', 'objective', 'about me', 'certifications',
+          'achievements', 'awards'
+        ]
+      };
+
+      let matchedCategories = 0;
+      let totalKeywordMatches = 0;
+      const categoryBreakdown = {};
+
+      for (const [category, keywords] of Object.entries(resumeCategories)) {
+        const matches = keywords.filter(kw => cleanText.includes(kw));
+        categoryBreakdown[category] = matches.length;
+        totalKeywordMatches += matches.length;
+        if (matches.length > 0) {
+          matchedCategories++;
+        }
+      }
+
+      // If document contains non-resume flags (e.g. invoice/bill) and lacks complete resume sections
+      if (hasNonResumeMarker && matchedCategories < 3) {
+        return {
+          isValid: false,
+          reason: 'Document appears to be an invoice, bill, receipt, or non-academic file.'
+        };
+      }
+
+      // Valid resume must match at least 2 distinct resume categories AND at least 3 keyword occurrences
+      if (matchedCategories >= 2 && totalKeywordMatches >= 3) {
+        return {
+          isValid: true,
+          matchedCategories,
+          totalKeywordMatches,
+          categoryBreakdown
+        };
+      }
+
+      return {
+        isValid: false,
+        reason: 'Missing required sections such as Education, Technical Skills, and Projects/Experience.'
+      };
+    }
+
     function resetUploadedResumeState() {
       currentResumeText = '';
       currentFileName = '';
       currentParsedStats = null;
       lastAiAnalysis = null;
       isAiAnalyzing = false;
+
+      // Clear non-resume alert banner
+      const resumeAlert = document.getElementById('resume-validation-alert');
+      if (resumeAlert) resumeAlert.classList.add('hidden');
 
       // Screen 2 elements
       const displayFilename = document.getElementById('display-filename');
@@ -2904,7 +3121,56 @@ class LRUCache<K, V> {
       `;
     }
 
+    const DEFAULT_REGISTERED_USERS = [
+      {
+        name: 'Sai Vardhan',
+        email: 'sai@univ.edu.in',
+        identifier: '22bcse104',
+        phone: '+91 98765 43210',
+        password: 'DemoPass2026!',
+        role: 'student',
+        registeredAt: '2026-01-01T00:00:00.000Z'
+      },
+      {
+        name: 'Placement Officer Dr. Sharma',
+        email: 'tpo@univ.edu.in',
+        identifier: 'tpo-admin',
+        phone: '+91 98765 00000',
+        password: 'AdminPass2026!',
+        role: 'tpo',
+        registeredAt: '2026-01-01T00:00:00.000Z'
+      },
+      {
+        name: 'Campus Recruiter',
+        email: 'recruiter@techcorp.com',
+        identifier: 'company-hr',
+        phone: '+91 98765 11111',
+        password: 'CompanyPass2026!',
+        role: 'company',
+        registeredAt: '2026-01-01T00:00:00.000Z'
+      }
+    ];
+
+    function getRegisteredUsers() {
+      try {
+        const raw = localStorage.getItem('pms_registered_users');
+        if (!raw) {
+          localStorage.setItem('pms_registered_users', JSON.stringify(DEFAULT_REGISTERED_USERS));
+          return [...DEFAULT_REGISTERED_USERS];
+        }
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+          localStorage.setItem('pms_registered_users', JSON.stringify(DEFAULT_REGISTERED_USERS));
+          return [...DEFAULT_REGISTERED_USERS];
+        }
+        return parsed;
+      } catch (_) {
+        return [...DEFAULT_REGISTERED_USERS];
+      }
+    }
+
     function logout() {
+      isAuthenticated = false;
       resetUploadedResumeState();
       currentRollNumber = '';
       currentStudentName = '';
@@ -2919,7 +3185,7 @@ class LRUCache<K, V> {
       localStorage.removeItem('pms_apple_student');
 
       showStep(1);
-      showToast('Logged out successfully. All resume and candidate data cleared.');
+      showToast('Logged out successfully. All candidate and resume data cleared.');
     }
 
     let currentAuthMode = 'signin';
@@ -3037,31 +3303,55 @@ class LRUCache<K, V> {
     function handleSignInSubmit(e) {
       if (e && e.preventDefault) e.preventDefault();
       const errBanner = document.getElementById('auth-error-banner');
+      const succBanner = document.getElementById('auth-success-banner');
       if (errBanner) errBanner.classList.add('hidden');
+      if (succBanner) succBanner.classList.add('hidden');
 
       const idInput = document.getElementById('login-identifier');
       const pwInput = document.getElementById('login-password');
-      const enteredId = idInput && idInput.value.trim() ? idInput.value.trim() : 'STU-2026';
+      const enteredId = idInput ? idInput.value.trim() : '';
       const enteredPw = pwInput ? pwInput.value.trim() : '';
 
       if (!enteredId || !enteredPw) {
         if (errBanner) {
-          errBanner.innerText = 'Please enter both your identifier and password.';
+          errBanner.innerText = 'Please enter both your identifier (Roll Number / Email) and password.';
           errBanner.classList.remove('hidden');
         }
         return;
       }
 
-      let derivedName = 'Student Candidate';
-      if (enteredId.includes('@')) {
-        const localPart = enteredId.split('@')[0];
-        derivedName = localPart.charAt(0).toUpperCase() + localPart.slice(1);
-      } else if (enteredId.length > 2) {
-        derivedName = `Student (${enteredId})`;
+      const query = enteredId.toLowerCase();
+      const users = getRegisteredUsers();
+      const matchedUser = users.find(u => 
+        (u.identifier && u.identifier.toLowerCase() === query) ||
+        (u.email && u.email.toLowerCase() === query)
+      );
+
+      // STRICT VALIDATION: Unregistered new users CANNOT log in without signing up!
+      if (!matchedUser) {
+        if (errBanner) {
+          errBanner.innerHTML = `<strong>Account Not Found!</strong> Unregistered user "<em>${enteredId}</em>". New users must <strong><button type="button" onclick="switchAuthMode('signup')" class="underline font-bold text-blue-600 hover:text-blue-800">Sign Up</button></strong> first before logging in.`;
+          errBanner.classList.remove('hidden');
+        }
+        showToast('❌ Account not found. New users must Sign Up first.');
+        return;
       }
 
-      currentRollNumber = enteredId;
-      currentStudentName = derivedName;
+      // Check password
+      if (matchedUser.password && matchedUser.password !== enteredPw) {
+        if (errBanner) {
+          errBanner.innerHTML = '<strong>Authentication Failed:</strong> Incorrect password. Please try again.';
+          errBanner.classList.remove('hidden');
+        }
+        showToast('❌ Incorrect password.');
+        return;
+      }
+
+      // Successful authentication
+      isAuthenticated = true;
+      currentRollNumber = (matchedUser.identifier || enteredId).toUpperCase();
+      currentStudentName = matchedUser.name || 'Student Candidate';
+      currentAuthRole = matchedUser.role || currentAuthRole;
 
       resetUploadedResumeState();
 
@@ -3081,7 +3371,7 @@ class LRUCache<K, V> {
         role: currentAuthRole 
       }));
 
-      showToast(`Authenticated as ${currentStudentName} (${currentRollNumber})`);
+      showToast(`✓ Welcome back, ${currentStudentName}!`);
       setTimeout(() => {
         showStep(2);
       }, 300);
@@ -3125,20 +3415,44 @@ class LRUCache<K, V> {
         return;
       }
 
-      // Store in users registry
-      try {
-        const users = JSON.parse(localStorage.getItem('pms_registered_users') || '[]');
-        users.push({ name, email, identifier, phone, role: currentSignUpRole, registeredAt: new Date().toISOString() });
-        localStorage.setItem('pms_registered_users', JSON.stringify(users));
-      } catch (_) {}
+      const normId = identifier.toLowerCase();
+      const normEmail = email.toLowerCase();
+      const users = getRegisteredUsers();
 
-      if (succBanner) {
-        succBanner.innerHTML = `<strong>Account Created!</strong> Welcome ${name}, initializing your placement workspace...`;
-        succBanner.classList.remove('hidden');
+      // Check if user already exists
+      const existingUser = users.find(u => 
+        (u.identifier && u.identifier.toLowerCase() === normId) ||
+        (u.email && u.email.toLowerCase() === normEmail)
+      );
+
+      if (existingUser) {
+        if (errBanner) {
+          errBanner.innerHTML = `<strong>Account Already Exists:</strong> A user with Roll Number "${identifier}" or Email "${email}" is already registered. Please switch to <strong><button type="button" onclick="switchAuthMode('signin')" class="underline font-bold text-blue-600 hover:text-blue-800">Sign In</button></strong>.`;
+          errBanner.classList.remove('hidden');
+        }
+        showToast('Account already exists. Please Sign In.');
+        return;
       }
 
-      currentRollNumber = identifier;
+      // Register new user with password
+      const newUser = {
+        name,
+        email,
+        identifier: normId,
+        phone: phone || '',
+        password,
+        role: currentSignUpRole,
+        registeredAt: new Date().toISOString()
+      };
+      users.push(newUser);
+      localStorage.setItem('pms_registered_users', JSON.stringify(users));
+
+      // Authenticate new user immediately
+      isAuthenticated = true;
+      currentRollNumber = identifier.toUpperCase();
       currentStudentName = name;
+      currentAuthRole = currentSignUpRole;
+
       resetUploadedResumeState();
 
       const dossierName = document.getElementById('dossier-student-name');
@@ -3157,15 +3471,29 @@ class LRUCache<K, V> {
         role: currentSignUpRole 
       }));
 
-      showToast(`Welcome, ${name}! Account created successfully.`);
+      if (succBanner) {
+        succBanner.innerHTML = `<strong>Account Created Successfully!</strong> Welcome, ${name}. Initializing your placement workspace...`;
+        succBanner.classList.remove('hidden');
+      }
+
+      showToast(`Welcome, ${name}! Account registered successfully.`);
       setTimeout(() => {
         showStep(2);
       }, 700);
     }
 
     function demoLogin() {
+      const users = getRegisteredUsers();
+      let demoUser = users.find(u => u.identifier === '22bcse104');
+      if (!demoUser) {
+        demoUser = DEFAULT_REGISTERED_USERS[0];
+        users.push(demoUser);
+        localStorage.setItem('pms_registered_users', JSON.stringify(users));
+      }
+
+      isAuthenticated = true;
       currentRollNumber = '22BCSE104';
-      currentStudentName = 'Student (22BCSE104)';
+      currentStudentName = demoUser.name || 'Student (22BCSE104)';
 
       const idInput = document.getElementById('login-identifier');
       if (idInput) idInput.value = currentRollNumber;
@@ -3269,23 +3597,24 @@ class LRUCache<K, V> {
                 const pageText = textContent.items.map(item => item.str).join(' ');
                 fullText += pageText + '\n';
               }
-              return resolve({
-                success: true,
-                text: fullText.trim(),
-                numPages: pdfDoc.numPages,
-                charCount: fullText.length
-              });
+              if (fullText.trim().length > 0) {
+                return resolve({
+                  success: true,
+                  text: fullText.trim(),
+                  numPages: pdfDoc.numPages,
+                  charCount: fullText.length
+                });
+              }
             } catch (pdfErr) {
               console.warn('[PDF.js Error]', pdfErr);
             }
           }
 
-          // Fallback text extraction
+          // Return failure if no text could be extracted
           resolve({
-            success: true,
-            text: `Candidate Resume ${file.name}. Technical Computer Science student. Skills: Java, Spring Boot, MySQL, REST APIs, Git, Algorithms. CGPA 9.42.`,
-            numPages: 1,
-            charCount: 150
+            success: false,
+            text: '',
+            error: 'No readable text content found in file.'
           });
         };
         reader.readAsDataURL(file);
@@ -3296,50 +3625,105 @@ class LRUCache<K, V> {
       const file = e.target.files[0];
       if (!file) return;
 
-      currentFileName = file.name;
-      document.getElementById('display-filename').innerText = file.name;
-      document.getElementById('parsing-doc-name').innerText = file.name;
       closeModal('modal-upload');
-
       showToast(`Parsing ${file.name} with institutional PDF parser...`);
 
       const parsed = await parsePdfClientOrServer(file);
-      if (parsed.success && parsed.text) {
-        currentResumeText = parsed.text;
-        currentParsedStats = parsed;
 
-        // Show parsed badge
+      // Strict Resume Validation: Verify document content
+      const validation = (parsed && parsed.success && parsed.text)
+        ? validateResumeDocument(parsed.text, file.name)
+        : { isValid: false, reason: 'Unable to extract text from the uploaded document.' };
+
+      if (!validation.isValid) {
+        // REJECT DOCUMENT: Document is NOT a resume!
+        currentResumeText = '';
+        currentFileName = '';
+        currentParsedStats = null;
+
+        const displayFilename = document.getElementById('display-filename');
+        if (displayFilename) displayFilename.innerText = `Rejected: ${file.name}`;
+
         const badge = document.getElementById('pdf-parsed-indicator');
-        const stats = document.getElementById('pdf-parsed-stats');
-        if (badge && stats) {
-          badge.classList.remove('hidden');
-          stats.innerText = `${parsed.numPages} pg • ${parsed.charCount} chars`;
-        }
+        if (badge) badge.classList.add('hidden');
 
         const atsBadge = document.getElementById('card-ats-badge');
         if (atsBadge) {
-          atsBadge.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300 flex items-center gap-1.5 shadow-sm";
-          atsBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>Parsed (Ready for AI)</span>';
+          atsBadge.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-300 flex items-center gap-1.5 shadow-sm";
+          atsBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span><span>Rejected: Not a Resume</span>';
         }
 
         const statusTag = document.getElementById('verified-status-tag');
         if (statusTag) {
-          statusTag.className = "text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1";
-          statusTag.innerHTML = '✓ Uploaded';
+          statusTag.className = "text-xs font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full flex items-center gap-1";
+          statusTag.innerHTML = '❌ Not a Resume';
         }
 
         const fileDesc = document.getElementById('display-file-desc');
         if (fileDesc) {
-          fileDesc.innerText = `Extracted ${parsed.charCount} characters across ${parsed.numPages} page(s). Ready for Groq AI skill fitment analysis.`;
+          fileDesc.innerText = `⚠️ Upload rejected: The uploaded document "${file.name}" is not a resume (${validation.reason}). Please upload a valid student resume containing education, skills, and projects.`;
         }
 
-        showToast(`✓ PDF Parsed: ${parsed.charCount} chars extracted from ${file.name}`);
+        const alertBanner = document.getElementById('resume-validation-alert');
+        const alertText = document.getElementById('resume-validation-alert-text');
+        if (alertBanner && alertText) {
+          alertText.innerHTML = `<strong>Document Rejected:</strong> The uploaded file "<em>${file.name}</em>" is not a resume (${validation.reason}). Please upload a valid student resume (PDF) containing your education, technical skills, and academic projects.`;
+          alertBanner.classList.remove('hidden');
+        }
+
+        showToast('❌ The uploaded document is not a resume. Please upload a valid resume.', 7000);
+        return;
       }
+
+      // VALID RESUME ACCEPTED
+      currentFileName = file.name;
+      currentResumeText = parsed.text;
+      currentParsedStats = parsed;
+
+      const alertBanner = document.getElementById('resume-validation-alert');
+      if (alertBanner) alertBanner.classList.add('hidden');
+
+      const displayFilename = document.getElementById('display-filename');
+      if (displayFilename) displayFilename.innerText = file.name;
+
+      const parsingDoc = document.getElementById('parsing-doc-name');
+      if (parsingDoc) parsingDoc.innerText = file.name;
+
+      // Show parsed badge
+      const badge = document.getElementById('pdf-parsed-indicator');
+      const stats = document.getElementById('pdf-parsed-stats');
+      if (badge && stats) {
+        badge.classList.remove('hidden');
+        stats.innerText = `${parsed.numPages} pg • ${parsed.charCount} chars`;
+      }
+
+      const atsBadge = document.getElementById('card-ats-badge');
+      if (atsBadge) {
+        atsBadge.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300 flex items-center gap-1.5 shadow-sm";
+        atsBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>Verified Resume (Ready for AI)</span>';
+      }
+
+      const statusTag = document.getElementById('verified-status-tag');
+      if (statusTag) {
+        statusTag.className = "text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1";
+        statusTag.innerHTML = '✓ Valid Resume';
+      }
+
+      const fileDesc = document.getElementById('display-file-desc');
+      if (fileDesc) {
+        fileDesc.innerText = `Extracted ${parsed.charCount} characters across ${parsed.numPages} page(s). Resume credentials verified. Ready for Groq AI skill fitment analysis.`;
+      }
+
+      showToast(`✓ Resume Verified: ${parsed.charCount} chars extracted from ${file.name}`);
     }
 
     function simulateUpload() {
       currentFileName = `Resume_${currentRollNumber || 'Candidate'}.pdf`;
-      currentResumeText = `${currentStudentName || 'Technical Candidate'}. B.Tech Computer Science, CGPA 9.15. Core technical skills: Java, Spring Boot, PostgreSQL, Microservices, Docker, Git, Data Structures, Distributed Systems. Projects: Scalable API Gateway, Realtime Telemetry Monitor.`;
+      currentResumeText = `${currentStudentName || 'Sai Vardhan'}. B.Tech Computer Science and Engineering, CGPA 9.15. Education: National Institute of Technology, B.Tech CSE (2022-2026). Technical Skills: Java, Spring Boot, PostgreSQL, Microservices, Docker, Git, Data Structures, Algorithms, Distributed Systems, Python, REST APIs. Work Experience & Projects: Built Scalable API Gateway with OAuth2, Developed Realtime Telemetry Monitor in React & Node.js, Summer Software Engineering Intern at Tech Labs. Contact: sai@univ.edu.in, +91 98765 43210.`;
+      
+      const alertBanner = document.getElementById('resume-validation-alert');
+      if (alertBanner) alertBanner.classList.add('hidden');
+
       document.getElementById('display-filename').innerText = currentFileName;
       document.getElementById('parsing-doc-name').innerText = currentFileName;
 
@@ -3353,29 +3737,43 @@ class LRUCache<K, V> {
       const atsBadge = document.getElementById('card-ats-badge');
       if (atsBadge) {
         atsBadge.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300 flex items-center gap-1.5 shadow-sm";
-        atsBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>Parsed (Ready for AI)</span>';
+        atsBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>Verified Resume (Ready for AI)</span>';
       }
 
       const statusTag = document.getElementById('verified-status-tag');
       if (statusTag) {
         statusTag.className = "text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1";
-        statusTag.innerHTML = '✓ Uploaded';
+        statusTag.innerHTML = '✓ Valid Resume';
       }
 
       const fileDesc = document.getElementById('display-file-desc');
       if (fileDesc) {
-        fileDesc.innerText = 'Extracted 1,420 characters. Ready for Groq AI skill fitment analysis.';
+        fileDesc.innerText = 'Extracted 1,420 characters. Resume credentials verified. Ready for Groq AI skill fitment analysis.';
       }
 
       closeModal('modal-upload');
-      showToast(`Uploaded: ${currentFileName}`);
+      showToast(`Uploaded & Verified: ${currentFileName}`);
     }
 
     async function startAiAnalysis() {
       if (isAiAnalyzing) return;
+
       if (!currentResumeText || !currentResumeText.trim()) {
         openUploadModal();
-        showToast('Please upload your resume PDF to begin AI fitment analysis.');
+        showToast('⚠️ Please upload your resume PDF to begin AI fitment analysis.');
+        return;
+      }
+
+      // Strict Resume Gate: Reject non-resume documents and prevent going to matched jobs
+      const validation = validateResumeDocument(currentResumeText, currentFileName);
+      if (!validation.isValid) {
+        showToast('❌ The uploaded document is not a resume. Cannot proceed to matched jobs.', 7000);
+        const alertBanner = document.getElementById('resume-validation-alert');
+        const alertText = document.getElementById('resume-validation-alert-text');
+        if (alertBanner && alertText) {
+          alertText.innerHTML = `<strong>Action Blocked:</strong> The uploaded document is not a resume (${validation.reason}). Please upload a valid resume PDF to view matched jobs.`;
+          alertBanner.classList.remove('hidden');
+        }
         return;
       }
 
@@ -3407,6 +3805,8 @@ class LRUCache<K, V> {
         <span class="text-slate-400 font-semibold">Waiting</span>
       `;
 
+      let analysisSucceeded = false;
+
       try {
         const targetRole = dreamRoleConfigs[selectedDreamRoleKey]?.title || 'Backend Engineer / Distributed Systems';
         const enteredId = document.getElementById('login-identifier')?.value?.trim() || currentRollNumber || 'STU-2026';
@@ -3426,6 +3826,20 @@ class LRUCache<K, V> {
 
         const data = await response.json();
 
+        // Check if server rejected as non-resume
+        if (data.isNotResume || (data.error && data.error.includes('not a resume'))) {
+          showToast(`❌ ${data.error || 'The uploaded document is not a resume.'}`, 7000);
+          const alertBanner = document.getElementById('resume-validation-alert');
+          const alertText = document.getElementById('resume-validation-alert-text');
+          if (alertBanner && alertText) {
+            alertText.innerHTML = `<strong>Document Rejected:</strong> ${data.error || 'The uploaded document is not a resume.'}`;
+            alertBanner.classList.remove('hidden');
+          }
+          isAiAnalyzing = false;
+          showStep(2);
+          return;
+        }
+
         step2.innerHTML = `
           <span class="text-slate-700 dark:text-slate-300 font-medium">Groq AI (Llama 3.1) evaluation completed...</span>
           <span class="text-emerald-600 font-bold flex items-center gap-1">
@@ -3444,20 +3858,29 @@ class LRUCache<K, V> {
 
         if (data.success && data.analysis) {
           lastAiAnalysis = data;
+          analysisSucceeded = true;
           applyLiveAnalysisToUi(data);
           showToast(`✓ Saved to Supabase PostgreSQL Record #${data.dbRecordId}!`);
         } else {
+          analysisSucceeded = true;
           renderTailoredSkills();
         }
       } catch (err) {
         console.warn('[AI Pipeline Error]', err);
+        analysisSucceeded = true;
         renderTailoredSkills();
         showToast('Generated analysis with local rule engine.');
       } finally {
         isAiAnalyzing = false;
-        setTimeout(() => {
-          showStep(4);
-        }, 1200);
+        if (analysisSucceeded) {
+          setTimeout(() => {
+            showStep(4);
+          }, 1200);
+        } else {
+          setTimeout(() => {
+            showStep(2);
+          }, 1000);
+        }
       }
     }
 
@@ -3714,14 +4137,17 @@ class LRUCache<K, V> {
       openModal('modal-roadmap');
     }
 
-    function showToast(msg) {
+    let toastTimer = null;
+    function showToast(msg, duration = 3000) {
       const toast = document.getElementById('toast');
       const text = document.getElementById('toast-text');
+      if (!toast || !text) return;
       text.innerText = msg;
       toast.classList.remove('translate-y-24', 'opacity-0');
-      setTimeout(() => {
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
         toast.classList.add('translate-y-24', 'opacity-0');
-      }, 3000);
+      }, duration);
     }
 
     function renderDrivesInScreen4(drives) {
@@ -3807,8 +4233,47 @@ class LRUCache<K, V> {
       const isDark = document.documentElement.classList.contains('dark');
       updateThemeUI(isDark);
 
-      // Enforce Step 1 initialization: strictly hide Logout, Back, and Workstation nav
-      showStep(1);
+      // Mobile & Desktop Header Scroll Listener: automatically shrink sticky header when scrolling
+      window.addEventListener('scroll', () => {
+        const hdr = document.getElementById('main-header');
+        if (!hdr) return;
+        if (window.scrollY > 20) {
+          hdr.classList.add('header-compact');
+        } else {
+          hdr.classList.remove('header-compact');
+        }
+      }, { passive: true });
+
+      // Session restore check
+      const savedUser = sessionStorage.getItem('current_user');
+      if (savedUser) {
+        try {
+          const userObj = JSON.parse(savedUser);
+          if (userObj && (userObj.rollNumber || userObj.name)) {
+            isAuthenticated = true;
+            currentRollNumber = userObj.rollNumber || '';
+            currentStudentName = userObj.name || '';
+            currentAuthRole = userObj.role || 'student';
+
+            const dossierName = document.getElementById('dossier-student-name');
+            if (dossierName) dossierName.innerText = currentStudentName;
+            const dossierRoll = document.getElementById('dossier-roll-number');
+            if (dossierRoll) dossierRoll.innerText = currentRollNumber;
+
+            const reportCandidate = document.getElementById('report-candidate-name');
+            if (reportCandidate) reportCandidate.innerText = currentStudentName;
+            const reportRoll = document.getElementById('report-roll-number');
+            if (reportRoll) reportRoll.innerText = currentRollNumber;
+          }
+        } catch (_) {}
+      }
+
+      // If authenticated, proceed to Step 2; otherwise strictly enforce Step 1 (Login)
+      if (isAuthenticated) {
+        showStep(2);
+      } else {
+        showStep(1);
+      }
 
       renderTailoredSkills();
       // Check Supabase connection & load drives
