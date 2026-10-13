@@ -2828,11 +2828,26 @@ class LRUCache<K, V> {
       showToast('✓ Placement preferences & ERP settings saved successfully!');
     }
 
+    // Centralized API Endpoint Resolver for Mobile (Capacitor/Phone browser) & Laptop
+    function getApiEndpoint(path) {
+      const cleanPath = path.startsWith('/') ? path : '/' + path;
+      if (
+        window.Capacitor !== undefined || 
+        window.location.protocol === 'capacitor:' || 
+        window.location.protocol === 'file:' ||
+        (window.location.hostname === 'localhost' && (!window.location.port || window.location.port === '80'))
+      ) {
+        const customHost = localStorage.getItem('pms_api_server_host') || '10.10.135.11:3000';
+        return `http://${customHost}${cleanPath}`;
+      }
+      return cleanPath;
+    }
+
     async function resetAllPortalData() {
       if (!confirm('Are you sure you want to remove all database records and start freshly? This will wipe all uploaded resumes, applications, and non-default candidate data.')) return;
       showToast('Wiping database and restarting freshly...');
       try {
-        const resp = await fetch('/api/clear-all-data', { method: 'POST' });
+        const resp = await fetch(getApiEndpoint('/api/clear-all-data'), { method: 'POST' });
         const data = await resp.json();
         localStorage.removeItem('pms_registered_users');
         localStorage.removeItem('pms_apple_session');
@@ -3185,7 +3200,14 @@ class LRUCache<K, V> {
 
     async function syncRegisteredUsersWithServer() {
       try {
-        const resp = await fetch('/api/auth/users');
+        const localUsers = getRegisteredUsers();
+        // Two-way synchronization: push local accounts up to Supabase and pull cloud accounts down
+        const syncUrl = getApiEndpoint('/api/auth/sync');
+        const resp = await fetch(syncUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ users: localUsers })
+        });
         if (resp.ok) {
           const data = await resp.json();
           if (data.success && Array.isArray(data.users)) {
@@ -3209,11 +3231,42 @@ class LRUCache<K, V> {
             if (added) {
               localStorage.setItem('pms_registered_users', JSON.stringify(users));
             }
+            return users;
           }
         }
       } catch (e) {
-        // Silent fallback
+        // Fallback to GET /api/auth/users
+        try {
+          const resp = await fetch(getApiEndpoint('/api/auth/users'));
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.success && Array.isArray(data.users)) {
+              const users = getRegisteredUsers();
+              let added = false;
+              data.users.forEach(u => {
+                const k = (u.identifier || '').toLowerCase();
+                const em = (u.email || '').toLowerCase();
+                const existingIdx = users.findIndex(ex => 
+                  (ex.identifier || '').toLowerCase() === k || 
+                  (ex.email || '').toLowerCase() === em
+                );
+                if (existingIdx >= 0) {
+                  users[existingIdx] = { ...users[existingIdx], ...u };
+                  added = true;
+                } else {
+                  users.push(u);
+                  added = true;
+                }
+              });
+              if (added) {
+                localStorage.setItem('pms_registered_users', JSON.stringify(users));
+              }
+              return users;
+            }
+          }
+        } catch (_) {}
       }
+      return getRegisteredUsers();
     }
 
     function findMatchingUser(queryStr, users) {
@@ -3453,7 +3506,8 @@ class LRUCache<K, V> {
 
       // 1. Primary: Authenticate against Supabase PostgreSQL server (works across laptops, mobiles, and other browsers)
       try {
-        const resp = await fetch('/api/auth/login', {
+        const loginUrl = getApiEndpoint('/api/auth/login');
+        const resp = await fetch(loginUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ identifier: enteredId, password: enteredPw })
@@ -3493,9 +3547,11 @@ class LRUCache<K, V> {
         if (matchedLocal) {
           const isDemo = (matchedLocal.identifier || '').toLowerCase() === '22bcse104' || (matchedLocal.email || '').toLowerCase() === 'sai@univ.edu.in';
           const demoPwMatch = isDemo && ['demopass2026!', 'password', '123456', 'thatikonda@123', 'demo', 'admin'].includes(enteredPw.toLowerCase());
-          const standardPwMatch = matchedLocal.password && (matchedLocal.password === enteredPw);
+          const standardPwMatch = matchedLocal.password && (matchedLocal.password.trim() === enteredPw.trim());
           if (demoPwMatch || standardPwMatch) {
             authenticatedUser = matchedLocal;
+            // Push to cloud in background so server has it for mobile and other devices
+            syncRegisteredUsersWithServer();
           } else {
             if (errBanner) {
               errBanner.innerHTML = '<strong>Authentication Failed:</strong> Incorrect password. Please try again.';
@@ -3564,8 +3620,8 @@ class LRUCache<K, V> {
       const email = document.getElementById('signup-email')?.value.trim();
       const identifier = document.getElementById('signup-identifier')?.value.trim();
       const phone = document.getElementById('signup-phone')?.value.trim();
-      const password = document.getElementById('signup-password')?.value;
-      const confirmPassword = document.getElementById('signup-confirm-password')?.value;
+      const password = document.getElementById('signup-password')?.value?.trim();
+      const confirmPassword = document.getElementById('signup-confirm-password')?.value?.trim();
 
       if (!name || !email || !identifier || !password) {
         if (errBanner) {
@@ -3610,7 +3666,8 @@ class LRUCache<K, V> {
 
       // 1. Primary: Save account directly to Supabase PostgreSQL database so it is accessible on mobile and laptop
       try {
-        const resp = await fetch('/api/auth/register', {
+        const regUrl = getApiEndpoint('/api/auth/register');
+        const resp = await fetch(regUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3647,6 +3704,9 @@ class LRUCache<K, V> {
         users.push(newUser);
       }
       localStorage.setItem('pms_registered_users', JSON.stringify(users));
+
+      // 3. Immediately sync with cloud database
+      await syncRegisteredUsersWithServer();
 
       // 3. Clear sign-up form fields so they don't linger on logout
       ['signup-name', 'signup-email', 'signup-identifier', 'signup-phone', 'signup-password', 'signup-confirm-password'].forEach(id => {
@@ -3773,7 +3833,7 @@ class LRUCache<K, V> {
           const base64 = evt.target.result;
           // 1. Try server-side parser first (/api/parse-resume)
           try {
-            const resp = await fetch('/api/parse-resume', {
+            const resp = await fetch(getApiEndpoint('/api/parse-resume'), {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ base64, fileName: file.name })
@@ -4018,7 +4078,7 @@ class LRUCache<K, V> {
       try {
         const targetRole = dreamRoleConfigs[selectedDreamRoleKey]?.title || 'Backend Engineer / Distributed Systems';
         const enteredId = document.getElementById('login-identifier')?.value?.trim() || currentRollNumber || 'STU-2026';
-        const response = await fetch('/api/analyze-resume', {
+        const response = await fetch(getApiEndpoint('/api/analyze-resume'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -4286,7 +4346,7 @@ class LRUCache<K, V> {
       }
 
       try {
-        const res = await fetch('/api/apply-job', {
+        const res = await fetch(getApiEndpoint('/api/apply-job'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -4516,7 +4576,7 @@ class LRUCache<K, V> {
 
       renderTailoredSkills();
       // Check Supabase connection & load drives
-      fetch('/api/db-status')
+      fetch(getApiEndpoint('/api/db-status'))
         .then(r => r.json())
         .then(data => {
           if (data.status === 'healthy') {
@@ -4525,7 +4585,7 @@ class LRUCache<K, V> {
         })
         .catch(e => console.warn('[DB Status check failed]', e));
 
-      fetch('/api/job-drives')
+      fetch(getApiEndpoint('/api/job-drives'))
         .then(r => r.json())
         .then(data => {
           if (data.success && data.drives && data.drives.length > 0 && !lastAiAnalysis) {

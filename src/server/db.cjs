@@ -455,6 +455,30 @@ async function findUserByCredentials(queryStr) {
   }
 }
 
+async function syncUsersBatch(usersList) {
+  if (!Array.isArray(usersList) || usersList.length === 0) {
+    return await getRegisteredUsersFromDb();
+  }
+
+  for (const u of usersList) {
+    if (!u || !u.identifier || !u.password) continue;
+    try {
+      await registerUser({
+        identifier: u.identifier,
+        email: u.email || `${u.identifier}@univ.edu.in`,
+        name: u.name || 'Candidate',
+        phone: u.phone || '',
+        password: u.password,
+        role: u.role || 'student'
+      });
+    } catch (err) {
+      console.warn('[DB] syncUsersBatch user insert error:', err.message);
+    }
+  }
+
+  return await getRegisteredUsersFromDb();
+}
+
 module.exports = {
   pool,
   initDatabase,
@@ -469,5 +493,6 @@ module.exports = {
   clearAllData,
   registerUser,
   getRegisteredUsersFromDb,
-  findUserByCredentials
+  findUserByCredentials,
+  syncUsersBatch
 };
