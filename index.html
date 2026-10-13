@@ -62,12 +62,20 @@
       --nav-bg: rgba(58, 61, 102, 0.92);
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg-canvas);
       color: var(--text-main);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
       overflow-x: hidden;
       transition: background-color 0.25s ease, color 0.25s ease;
     }
@@ -387,14 +395,17 @@
        COMPACT STICKY HEADER ON SCROLL (MOBILE & DESKTOP)
        ========================================================================== */
     header#main-header {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      will-change: padding, box-shadow;
       transition: padding 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                  margin 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
                   box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     header#main-header.header-compact {
       padding-top: 0.35rem !important;
       padding-bottom: 0.35rem !important;
-      margin-bottom: 0.5rem !important;
       box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.16) !important;
     }
     header#main-header.header-compact #main-header-logo {
@@ -402,11 +413,22 @@
       height: 1.75rem !important;
       border-radius: 0.5rem !important;
     }
-    header#main-header.header-compact #main-header-subtitle {
-      display: none !important;
+    #main-header-subtitle,
+    #portal-version-badge {
+      transition: max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                  opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      max-height: 24px;
+      opacity: 1;
     }
+    header#main-header.header-compact #main-header-subtitle,
     header#main-header.header-compact #portal-version-badge {
-      display: none !important;
+      max-height: 0 !important;
+      opacity: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      pointer-events: none;
     }
 
     header#main-header.header-compact #post-selection-nav {
@@ -433,7 +455,7 @@
   <!-- ==========================================================================
        TOP NAVIGATION BAR WITH APPLE AESTHETICS & LIVE THEME TOGGLE
        ========================================================================== -->
-  <header id="main-header" class="apple-card mb-5 sm:mb-6 px-4 sm:px-6 py-3.5 sticky top-2 sm:top-3 z-40 transition-all duration-300">
+  <header id="main-header" class="apple-card mb-5 sm:mb-6 px-4 sm:px-6 py-3.5 sticky top-2 sm:top-3 z-40">
     <!-- Top Row: App Title (Left), Desktop Stepper (Center), Action Buttons (Right) -->
     <div class="flex items-center justify-between gap-3 sm:gap-4 flex-wrap md:flex-nowrap">
       <!-- Left: Logo & Portal Title -->
@@ -4429,16 +4451,37 @@ class LRUCache<K, V> {
       const isDark = document.documentElement.classList.contains('dark');
       updateThemeUI(isDark);
 
-      // Mobile & Desktop Header Scroll Listener: automatically shrink sticky header when scrolling
+      // Mobile & Desktop Header Scroll Listener: smooth hysteresis debounced via requestAnimationFrame
+      let isHeaderCompact = false;
+      let scrollTicking = false;
       window.addEventListener('scroll', () => {
-        const hdr = document.getElementById('main-header');
-        if (!hdr) return;
-        if (window.scrollY > 20) {
-          hdr.classList.add('header-compact');
-        } else {
-          hdr.classList.remove('header-compact');
+        if (!scrollTicking) {
+          window.requestAnimationFrame(() => {
+            const hdr = document.getElementById('main-header');
+            if (hdr) {
+              const currentY = window.pageYOffset || document.documentElement.scrollTop || 0;
+              // 70px threshold to shrink, 20px threshold to expand (50px buffer prevents oscillation/jitter)
+              if (!isHeaderCompact && currentY > 70) {
+                isHeaderCompact = true;
+                hdr.classList.add('header-compact');
+              } else if (isHeaderCompact && currentY < 20) {
+                isHeaderCompact = false;
+                hdr.classList.remove('header-compact');
+              }
+            }
+            scrollTicking = false;
+          });
+          scrollTicking = true;
         }
       }, { passive: true });
+
+      // Check initial scroll state on load
+      const initialY = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const initialHdr = document.getElementById('main-header');
+      if (initialHdr && initialY > 70) {
+        isHeaderCompact = true;
+        initialHdr.classList.add('header-compact');
+      }
 
       // Session restore check
       const savedUser = sessionStorage.getItem('current_user');
