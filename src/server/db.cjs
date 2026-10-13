@@ -148,6 +148,35 @@ async function initDatabase() {
       console.log('[DB] Seeded default campus recruitment drives.');
     }
 
+    // 7. Registered Authentication Users Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS public.auth_users (
+        id SERIAL PRIMARY KEY,
+        identifier VARCHAR(100) UNIQUE NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        phone VARCHAR(50),
+        password VARCHAR(255) NOT NULL,
+        role VARCHAR(50) DEFAULT 'student',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_auth_users_identifier ON public.auth_users(identifier);
+      CREATE INDEX IF NOT EXISTS idx_auth_users_email ON public.auth_users(email);
+    `);
+
+    // Seed default demo users if auth_users is empty
+    const userCountRes = await client.query('SELECT COUNT(*)::int as count FROM public.auth_users;');
+    if (userCountRes.rows[0].count === 0) {
+      await client.query(`
+        INSERT INTO public.auth_users (identifier, email, name, phone, password, role) VALUES
+        ('22bcse104', 'sai@univ.edu.in', 'Sai Vardhan', '+91 98765 43210', 'DemoPass2026!', 'student'),
+        ('tpo-admin', 'tpo@univ.edu.in', 'Placement Officer Dr. Sharma', '+91 98765 00000', 'AdminPass2026!', 'tpo'),
+        ('company-hr', 'recruiter@techcorp.com', 'Campus Recruiter', '+91 98765 11111', 'CompanyPass2026!', 'company')
+        ON CONFLICT (identifier) DO NOTHING;
+      `);
+      console.log('[DB] Seeded default demo auth users.');
+    }
+
     console.log('[DB] Supabase tables verified.');
     return true;
   } catch (error) {
@@ -314,6 +343,55 @@ async function clearAllData() {
   return { success: true, message: 'All mock and stored records cleared from database.' };
 }
 
+async function registerUser({ identifier, email, name, phone = '', password, role = 'student' }) {
+  const normId = (identifier || '').trim().toLowerCase();
+  const normEmail = (email || '').trim().toLowerCase();
+  const query = `
+    INSERT INTO public.auth_users (identifier, email, name, phone, password, role)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    ON CONFLICT (identifier) DO UPDATE SET
+      email = EXCLUDED.email,
+      name = EXCLUDED.name,
+      phone = EXCLUDED.phone,
+      password = EXCLUDED.password,
+      role = EXCLUDED.role
+    RETURNING id, identifier, email, name, phone, role, created_at;
+  `;
+  const res = await pool.query(query, [normId, normEmail, name, phone, password, role]);
+  return res.rows[0];
+}
+
+async function getRegisteredUsersFromDb() {
+  try {
+    const res = await pool.query('SELECT id, identifier, email, name, phone, password, role, created_at FROM public.auth_users ORDER BY id ASC;');
+    return res.rows;
+  } catch (err) {
+    console.warn('[DB] Failed to fetch auth users from table:', err.message);
+    return [];
+  }
+}
+
+async function findUserByCredentials(queryStr) {
+  const norm = (queryStr || '').trim().toLowerCase();
+  const cleanNorm = norm.replace(/[^a-z0-9]/g, '');
+  try {
+    const res = await pool.query(`
+      SELECT id, identifier, email, name, phone, password, role, created_at 
+      FROM public.auth_users 
+      WHERE LOWER(identifier) = $1 
+         OR LOWER(email) = $1 
+         OR LOWER(name) = $1
+         OR regexp_replace(LOWER(identifier), '[^a-z0-9]', '', 'g') = $2
+         OR regexp_replace(phone, '[^0-9]', '', 'g') = $2
+      LIMIT 1;
+    `, [norm, cleanNorm]);
+    return res.rows[0] || null;
+  } catch (err) {
+    console.warn('[DB] findUserByCredentials error:', err.message);
+    return null;
+  }
+}
+
 module.exports = {
   pool,
   initDatabase,
@@ -325,5 +403,8 @@ module.exports = {
   getApplications,
   getCandidates,
   getKpiMetrics,
-  clearAllData
+  clearAllData,
+  registerUser,
+  getRegisteredUsersFromDb,
+  findUserByCredentials
 };
